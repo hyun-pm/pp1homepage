@@ -140,9 +140,9 @@ body {
 /* 박연수(쿠파) — 시작 좌표(거의 맞게 설정). 필요하면 0.5~1% 단위로 미세 조정 */
 .yonsoo-area {
   left: 86%;
-  top: 72%;
+  top: 75%;
   width: 16%;
-  height: 56%;
+  height: 50%;
   border-radius: 0;
 }
 
