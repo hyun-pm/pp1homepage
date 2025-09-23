@@ -2,13 +2,64 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Super PPM</title>
     <link rel="stylesheet" href="styles.css" />
+    <meta name="color-scheme" content="light" />
   </head>
   <body>
-    <div class="hero">
+    <!-- 상단 로고/트리거 -->
+    <header class="topbar">
+      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행">
+        SUPERPPM
+      </button>
+    </header>
+
+    <!-- 상단 픽셀 텍스트 (여기에 타이핑됨) -->
+    <div class="pixel-text" id="introText" aria-live="polite"></div>
+
+    <!-- 메인 히어로: 그라데이션 + 중앙 이미지 -->
+    <main class="hero" role="main">
       <img src="pp1.png" alt="Super PPM" class="hero-image" />
-    </div>
+    </main>
+
+    <!-- 타자기 애니메이션 -->
+    <script>
+      const logoBtn = document.getElementById("logoBtn");
+      const introText = document.getElementById("introText");
+
+      const message = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
+누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
+함께라면 어떤 보스전도 두렵지 않습니다!`;
+
+      let timer;
+
+      function typeWriter(text, el, speed = 40) {
+        // '감속'이 켜진 사용자에겐 즉시 표시
+        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        clearInterval(timer);
+        el.textContent = "";
+        if (prefersReduced) {
+          el.textContent = text;
+          return;
+        }
+        let i = 0;
+        timer = setInterval(() => {
+          el.textContent += text[i] ?? "";
+          i++;
+          if (i >= text.length) clearInterval(timer);
+        }, speed);
+      }
+
+      // 첫 진입 자동 재생
+      window.addEventListener("DOMContentLoaded", () => {
+        typeWriter(message, introText, 40);
+      });
+
+      // 로고 클릭 시 다시 재생
+      logoBtn.addEventListener("click", () => {
+        typeWriter(message, introText, 40);
+      });
+    </script>
   </body>
 </html>
