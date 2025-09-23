@@ -45,15 +45,22 @@ body {
   padding-top: 120px;
 }
 
-/* 반응형 문구 (이미지 폭에 맞춰 함께 줄어듦) */
+/* 반응형 문구 — pp1 폭에 맞춰 같이 축소. 4줄 고정(줄내 개행 금지) */
 .pixel-text {
   width: min(90vw, calc(65vh * 1.779));
   max-width: 90vw;
   margin: 0 auto 20px;
   text-align: center;
-  font-size: clamp(14px, 2.2vw, 20px);
+
+  /* ✅ 크기만 반응형으로 줄이고, 줄내 개행은 금지 */
+  font-size: clamp(12px, 1.9vw, 20px);
   line-height: 1.6;
-  white-space: pre-line;
+
+  /* 줄바꿈(\n)만 유지하고, 한 줄 안에서는 절대 줄바꿈 안 함 */
+  white-space: pre;         /* 기존 pre-line → pre */
+  word-break: keep-all;
+  overflow: hidden;         /* 혹시라도 넘치면 잘라냄 */
+
   z-index: 2;
 }
 
@@ -124,18 +131,11 @@ body {
   position: fixed; inset: 0;
   display: grid; place-items: center;
   background: rgba(0,0,0,.6);
-  /* ✅ 모달 가시성 보장: opacity + visibility 동시 사용 */
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity .2s ease, visibility .2s ease;
   z-index: 120;
 }
-.video-modal.show {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
+.video-modal.show { opacity: 1; visibility: visible; pointer-events: auto; }
 
 .video-wrap {
   width: min(800px, 92vw);
