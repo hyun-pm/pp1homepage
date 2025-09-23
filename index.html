@@ -156,7 +156,7 @@
 
       /* ✨ 반짝이 시드 */
       const twinkles = document.getElementById('twinkles');
-      function seedTwinkles(n = 40) {
+      function seedTwinkles(n = 50) {
         if (!twinkles) return;
         twinkles.innerHTML = '';
         for (let i = 0; i < n; i++) {
@@ -174,7 +174,7 @@
         }
       }
       // 초기 시드
-      window.addEventListener('DOMContentLoaded', () => seedTwinkles(26));
+      window.addEventListener('DOMContentLoaded', () => seedTwinkles(35));
     </script>
   </body>
 </html>
