@@ -14,15 +14,15 @@
       </button>
     </header>
 
-    <!-- 🌟 흐르는 배경 패턴 (화면 전체, 가장 뒤) -->
-    <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
-
     <!-- 초기 문구: 처음만 노출 후 자동 숨김 -->
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
     <main class="hero" role="main">
       <div class="hero-figure">
         <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
+
+        <!-- 🌟 흐르는 배경 패턴 (이미지 위, 핫스팟 아래) -->
+        <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
 
         <!-- 캐릭터 핫스팟들 (투명) -->
         <button class="hotspot nahyun-area"   id="hs-nahyun"   aria-label="나현 캐릭터 열기"></button>
@@ -80,7 +80,7 @@
       const YONSOO   = { message: "에너지와 열정으로 분위기를 불태우고, 새로운 도전을 두려워하지 않는 \n추진력 담당 박연수", video: "videos/yonsoo.mp4" };
       const KABMIN   = { message: "pp1의 정신적 지주 갑민님", video: "videos/kabmin.mp4" };
 
-      // 타자 애니메이션 (Promise 반환)
+      // 타자 애니메이션
       let typerTimer;
       function typeWriter(text, el, speed = 40) {
         clearInterval(typerTimer);
@@ -98,7 +98,7 @@
         });
       }
 
-      // 모달 열기/닫기 (문구는 모달 내부 캡션에 표시)
+      // 모달 열기/닫기
       async function openVideo(src, message) {
         introText.classList.add("hidden");
         videoCap.textContent = "";
@@ -122,7 +122,6 @@
         videoCap.textContent = "";
       }
 
-      // 닫기 핸들
       closeModal.addEventListener("click", closeVideo);
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
@@ -168,9 +167,9 @@
           const t = types[i % types.length];
           const s = document.createElement('span');
           s.className = `sprite ${t}`;
-          s.style.left = (Math.random() * 100).toFixed(2) + 'vw';
-          // -20~120vh에서 시작 → 위로 흘러감
-          s.style.top  = (-20 + Math.random() * 140).toFixed(2) + 'vh';
+          // hero-figure 안에서 위치
+          s.style.left = (Math.random() * 100).toFixed(2) + '%';
+          s.style.top  = (Math.random() * 100).toFixed(2) + '%';
 
           // 크기/속도/지연
           const size = 22 + Math.random() * 32; // 22~54px
@@ -190,7 +189,7 @@
       // 초기 시드 (숫자 조절로 밀도 조정)
       seedFlow(34);
 
-      // 창 크기 변경 시 위치 살짝 리셋
+      // 리사이즈 시 재시드 (비율 유지)
       let flowTimer;
       window.addEventListener('resize', () => {
         clearTimeout(flowTimer);
