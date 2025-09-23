@@ -128,12 +128,21 @@ body {
   border-radius: 0;
 }
 
-/* 한구희(와루이지) — 시작 좌표 */
+/* 한구희(와루이지) */
 .guhee-area {
   left: 71%;
   top: 70%;
   width: 12%;
   height: 40%;
+  border-radius: 0;
+}
+
+/* 박연수(쿠파) — 시작 좌표(거의 맞게 설정). 필요하면 0.5~1% 단위로 미세 조정 */
+.yonsoo-area {
+  left: 86%;
+  top: 72%;
+  width: 16%;
+  height: 56%;
   border-radius: 0;
 }
 
