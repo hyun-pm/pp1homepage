@@ -88,7 +88,7 @@
       const YONSOO   = { message: "에너지와 열정으로 분위기를 불태우고, 새로운 도전을 두려워하지 않는 \n추진력 담당 박연수", video: "./videos/yonsoo.mp4" };
       const KABMIN   = { message: "pp1의 정신적 지주 갑민님", video: "./videos/kabmin.mp4" };
 
-      // ===== 타자 애니메이션
+      // ===== (기존 유지) 전역형 타이퍼 — 남겨두되 사용하지 않음
       let typerTimer;
       function typeWriter(text, el, speed = 40) {
         clearInterval(typerTimer);
@@ -106,13 +106,35 @@
         });
       }
 
+      // ===== ✅ 추가: 엘리먼트별 독립 타자 애니메이션
+      const typerTimers = new WeakMap();
+      function typeWriterEl(text, el, speed = 40) {
+        const prev = typerTimers.get(el);
+        if (prev) clearInterval(prev);
+
+        el.textContent = "";
+        let i = 0;
+        return new Promise(resolve => {
+          const timer = setInterval(() => {
+            el.textContent += text[i] ?? "";
+            i++;
+            if (i >= text.length) {
+              clearInterval(timer);
+              typerTimers.delete(el);
+              resolve();
+            }
+          }, speed);
+          typerTimers.set(el, timer);
+        });
+      }
+
       // ===== 모달 열기/닫기
       async function openVideo(src, message) {
         console.log('[openVideo] try open:', src);
-        // 캡션
+        // 캡션: 상단 문구와 독립적으로 타이핑
         videoCap.textContent = "";
         await Promise.resolve();
-        typeWriter(message, videoCap, 35);
+        typeWriterEl(message, videoCap, 35);
 
         // 비디오 속성 선세팅
         charVideo.muted = true;
@@ -124,7 +146,7 @@
         charVideo.src = src;
         charVideo.load();
 
-        // ✅ 모달을 즉시 띄워 시각적 피드백 보장
+        // 모달 표시
         videoModal.classList.add("show");
         videoModal.setAttribute("aria-hidden", "false");
 
@@ -134,7 +156,7 @@
           if (p && typeof p.catch === 'function') {
             p.catch(err => {
               console.warn('[video play blocked]', err);
-              // 재생이 막혀도(모바일 정책 등) 모달/컨트롤은 떠 있으니 사용자가 눌러서 재생 가능
+              // 모바일 정책 등으로 자동재생이 막히면 사용자가 컨트롤로 재생 가능
             });
           }
         }, 0);
@@ -147,6 +169,10 @@
         videoModal.setAttribute("aria-hidden", "true");
         charVideo.removeAttribute("src");
         charVideo.load();
+
+        // 캡션 타자 타이머 정리(선택)
+        const capTimer = typerTimers.get(videoCap);
+        if (capTimer) clearInterval(capTimer);
         videoCap.textContent = "";
       }
 
@@ -155,16 +181,15 @@
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
 
-      // ===== 초기: 문구 타이핑
+      // ===== 초기: 문구 타이핑 (계속 노출)
       window.addEventListener("DOMContentLoaded", async () => {
-        await typeWriter(defaultMessage, introText, 40);
-        // 디버그: 핫스팟이 실제로 바인딩 됐는지 찍기
+        await typeWriterEl(defaultMessage, introText, 40);
         console.log('[ready] hotspots bound');
       });
 
       // 로고 클릭 → 문구 타이핑만 다시
       logoBtn.addEventListener("click", async () => {
-        await typeWriter(defaultMessage, introText, 40);
+        await typeWriterEl(defaultMessage, introText, 40);
       });
 
       // ===== 캐릭터 클릭
