@@ -67,56 +67,34 @@ body {
   position: relative;
   width: min(90vw, calc(65vh * 1.779));
   aspect-ratio: 2048 / 1151;
-  overflow: hidden; /* 흐르는 배경 잘림 */
+  overflow: hidden; /* 흐르는 배경/스프라이트 클리핑 */
 }
+
+/* 🌟 흐르는 배경 (pp1 뒤쪽에 배치) */
+.flow-bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;          /* ✅ pp1 이미지(1)보다 낮게 */
+  pointer-events: none;
+}
+
+/* pp1 메인이미지는 flow-bg 위에 */
 .hero-image {
+  position: relative;
+  z-index: 1;          /* ✅ 이미지가 배경 위 */
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
 }
 
-/* 🌟 흐르는 배경 패턴 (이미지 위, 핫스팟 아래) */
-.flow-bg{
-  position: absolute;
-  inset: 0;
-  z-index: 1;          /* 이미지 위 */
-  pointer-events: none;
-}
-
-.sprite{
-  position: absolute;
-  width: var(--size);
-  height: var(--size);
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.28;             /* 은은하게 */
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
-  transform: translateY(0) rotate(var(--rot,0deg));
-  animation-name: floatUp;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-.sprite.star  { opacity: 0.30; }
-.sprite.box   { opacity: 0.26; }
-.sprite.heart { opacity: 0.32; }
-
-/* 위로 흐르며 좌우로 살짝 흔들림 */
-@keyframes floatUp{
-  0%   { transform: translateY(0)      rotate(var(--rot,0deg)); }
-  25%  { transform: translateY(-35%)   translateX(10px) rotate(calc(var(--rot,0deg) + 6deg)); }
-  50%  { transform: translateY(-70%)   translateX(0)    rotate(calc(var(--rot,0deg) + 10deg)); }
-  75%  { transform: translateY(-105%)  translateX(-10px)rotate(calc(var(--rot,0deg) + 6deg)); }
-  100% { transform: translateY(-140%)  rotate(var(--rot,0deg)); }
-}
-
-/* 핫스팟 (투명) */
+/* 핫스팟은 이미지 위 */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
-  z-index: 2;           /* 흐르는 배경 위 */
+  z-index: 2;           /* ✅ 이미지/배경보다 위 */
   background: transparent;
   outline: none;
 }
@@ -131,6 +109,27 @@ body {
 .guhee-area    { left: 71%;   top: 70%; width: 12%; height: 40%; border-radius: 0; }
 .yonsoo-area   { left: 86%;   top: 72%; width: 16%; height: 56%; border-radius: 0; }
 .kabmin-area   { left: 33%;   top: 24%; width: 15%; height: 32%; border-radius: 0; }
+
+/* 🎞️ 흐르는 스프라이트(배경 리소스) */
+.sprite{
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 1; /* ✅ 배경이지만 불투명 100%로 */
+  transform: translate3d(0,0,0);
+  animation-name: fallDiag;              /* ✅ 대각선 하강 */
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+/* ↘ 대각선으로 천천히 떨어지기 (뷰포트 기준이라 자연스러움) */
+@keyframes fallDiag{
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(20vw, 120vh, 0); }
+}
 
 /* 모달 + 영상 + 캡션(영상과 같은 레이어) */
 .video-modal {
