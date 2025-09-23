@@ -8,29 +8,21 @@
     <meta name="color-scheme" content="light" />
   </head>
   <body>
-    <!-- 상단 로고/트리거 -->
     <header class="topbar">
-      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행">
-        SUPERPPM
-      </button>
+      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행">SUPERPPM</button>
     </header>
 
-    <!-- 상단 텍스트(타자 애니메이션 대상) -->
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
-    <!-- 메인 히어로 -->
     <main class="hero" role="main">
-      <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
-
-      <!-- 나현 캐릭터 전체 클릭 영역 -->
-      <button
-        class="hotspot nahyun-area"
-        id="hs-nahyun"
-        aria-label="나현 캐릭터 열기">
-      </button>
+      <!-- 이미지 기준으로 위치 계산되도록 래퍼 추가 -->
+      <div class="hero-figure">
+        <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
+        <!-- 나현 전체 클릭 영역 -->
+        <button class="hotspot nahyun-area" id="hs-nahyun" aria-label="나현 캐릭터 열기"></button>
+      </div>
     </main>
 
-    <!-- 영상 모달 -->
     <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="캐릭터 영상">
       <div class="video-wrap">
         <video id="charVideo" playsinline controls muted></video>
@@ -88,17 +80,12 @@
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
 
-      // 첫 진입 기본 문구
       window.addEventListener("DOMContentLoaded", () => {
         typeWriter(defaultMessage, introText, 40);
       });
-
-      // 로고 클릭 → 기본 문구 다시 시작
       logoBtn.addEventListener("click", () => {
         typeWriter(defaultMessage, introText, 40);
       });
-
-      // 나현 클릭 → 문구 교체 + 영상 모달
       hsNahyun.addEventListener("click", () => {
         typeWriter(NAHYUN.message, introText, 35);
         openVideo(NAHYUN.video);
