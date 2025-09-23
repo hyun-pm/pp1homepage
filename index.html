@@ -14,11 +14,11 @@
       </button>
     </header>
 
-    <!-- 초기 문구: 계속 노출 -->
-    <div class="pixel-text" id="introText" aria-live="polite"></div>
-
     <main class="hero" role="main">
-      <!-- ✅ 배경 아이템(히어로 전체, pp1 뒤) -->
+      <!-- ✅ 반응형 문구: hero 내부(이미지와 같은 폭으로 반응) -->
+      <div class="pixel-text" id="introText" aria-live="polite"></div>
+
+      <!-- 배경 아이템(히어로 전체, pp1 뒤) -->
       <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
 
       <div class="hero-figure">
@@ -98,7 +98,7 @@
         });
       }
 
-      // 모달 열기/닫기 (상단 문구는 이제 숨기지 않음)
+      // 모달 열기/닫기 (상단 문구는 유지)
       async function openVideo(src, message) {
         videoCap.textContent = "";
         await Promise.resolve();
@@ -123,39 +123,23 @@
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
 
-      // 초기: 기본 문구 출력 (자동 숨김 제거)
+      // 초기: 문구 타이핑 (자동 숨김 없음)
       window.addEventListener("DOMContentLoaded", async () => {
-        introText.classList.remove("hidden"); // 혹시 숨겨져 있으면 보이게
         await typeWriter(defaultMessage, introText, 40);
-        // 더 이상 자동으로 숨기지 않음
       });
 
-      // 로고 클릭 → 초기 문구 타이핑만 다시
+      // 로고 클릭 → 문구 타이핑만 다시
       logoBtn.addEventListener("click", async () => {
-        introText.classList.remove("hidden");
         await typeWriter(defaultMessage, introText, 40);
-        // 숨기지 않고 그대로 유지
       });
 
-      // 캐릭터 클릭
-      hsNahyun  .addEventListener("click", () => openVideo(NAHYUN.video,   NAHYUN.message));
-      hsChulho  .addEventListener("click", () => openVideo(CHULHO.video,   CHULHO.message));
-      hsJihye   .addEventListener("click", () => openVideo(JIHYE.video,    JIHYE.message));
-      hsSuji    .addEventListener("click", () => openVideo(SUJI.video,     SUJI.message));
-      hsRokjeong.addEventListener("click", () => openVideo(ROKJEONG.video, ROKJEONG.message));
-      hsGuhee   .addEventListener("click", () => openVideo(GUHEE.video,    GUHEE.message));
-      hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
-      hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
-
-      /* 🌟 흐르는 배경 시드 (.hero 전체 기준) — 위→아래 직하강, 시작 지연 0~1s */
+      // 배경 아이템 낙하
       const flowBg = document.getElementById('flowBg');
-
       function imgFor(type){
         if (type === 'heart') return './heart.png';
         if (type === 'star')  return './star.png';
         return './box.png';
       }
-
       function seedFlow(total = 40) {
         if (!flowBg) return;
         flowBg.innerHTML = '';
@@ -173,17 +157,15 @@
           const size = 28 + Math.random() * 28; // 28~56px
           s.style.setProperty('--size', size + 'px');
           s.style.backgroundImage = `url('${imgFor(t)}')`;
-          s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';   // 0~1초만 지연
+          s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';       // 0~1s
           s.style.animationDuration = (15 + Math.random() * 10).toFixed(2) + 's'; // 15~25s
 
           flowBg.appendChild(s);
         }
       }
-
-      // 초기 시드
       seedFlow(30);
 
-      // 리사이즈 시 재시드
+      // 리사이즈 시 재시드(선택)
       let flowTimer;
       window.addEventListener('resize', () => {
         clearTimeout(flowTimer);
