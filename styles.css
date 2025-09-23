@@ -1,155 +1,145 @@
-<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Super PPM</title>
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="color-scheme" content="light" />
-  </head>
-  <body>
-    <header class="topbar">
-      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행">
-        SUPERPPM
-      </button>
-    </header>
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11-Bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
 
-    <!-- 초기 문구: 처음만 노출 후 자동 숨김 -->
-    <div class="pixel-text" id="introText" aria-live="polite"></div>
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: 'Galmuri11', monospace;
+  background: #269CFE;
+  color: #fff;
+}
 
-    <main class="hero" role="main">
-      <div class="hero-figure">
-        <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
+/* 상단 바 */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 56px; padding: 0 16px;
+  display: flex; align-items: center;
+  background: linear-gradient(#269CFEcc, #BDF4FFcc);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid #ffffff55;
+  z-index: 100;
+}
+.logo-btn {
+  font-family: 'Galmuri11', monospace;
+  font-weight: 700;
+  background: #000; color: #fff; border: 0; cursor: pointer;
+  padding: 8px 12px;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+}
+.logo-btn:active { transform: translate(1px,1px); }
 
-        <!-- 캐릭터 핫스팟들 (투명) -->
-        <button class="hotspot nahyun-area"   id="hs-nahyun"   aria-label="나현 캐릭터 열기"></button>
-        <button class="hotspot chulho-area"   id="hs-chulho"   aria-label="김철호 캐릭터 열기"></button>
-        <button class="hotspot jihye-area"    id="hs-jihye"    aria-label="설지혜 캐릭터 열기"></button>
-        <button class="hotspot suji-area"     id="hs-suji"     aria-label="김수지 캐릭터 열기"></button>
-        <button class="hotspot rokjeong-area" id="hs-rokjeong" aria-label="정록정 캐릭터 열기"></button>
-        <button class="hotspot guhee-area"    id="hs-guhee"    aria-label="한구희 캐릭터 열기"></button>
-        <button class="hotspot yonsoo-area"   id="hs-yonsoo"   aria-label="박연수 캐릭터 열기"></button>
-        <button class="hotspot kabmin-area"   id="hs-kabmin"   aria-label="김갑민 캐릭터 열기"></button>
-      </div>
-    </main>
+/* 초기 상단 텍스트 */
+.pixel-text {
+  position: fixed;
+  top: 68px; left: 0; right: 0;
+  z-index: 90;
+  padding: 0 16px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #ffffff;
+  white-space: pre-line;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .4s ease;
+}
+.pixel-text.hidden { opacity: 0; pointer-events: none; }
 
-    <!-- 영상 모달 (문구도 같은 레이어에서 영상 위에 표시) -->
-    <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="캐릭터 영상">
-      <div class="video-wrap">
-        <video id="charVideo" playsinline controls muted></video>
-        <div class="video-caption" id="videoCaption" aria-live="polite"></div>
-        <button class="close-btn" id="closeModal" aria-label="영상 닫기">✕</button>
-      </div>
-    </div>
+/* 히어로 */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(#269CFE, #BDF4FF);
+  position: relative;
+  padding-top: 120px;
+}
+.hero-figure {
+  position: relative;
+  width: min(90vw, calc(65vh * 1.779));
+  aspect-ratio: 2048 / 1151;
+}
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 
-    <script>
-      // 엘리먼트
-      const introText   = document.getElementById("introText");
-      const logoBtn     = document.getElementById("logoBtn");
-      const videoModal  = document.getElementById("videoModal");
-      const closeModal  = document.getElementById("closeModal");
-      const charVideo   = document.getElementById("charVideo");
-      const videoCap    = document.getElementById("videoCaption");
+/* 핫스팟 (투명) */
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 0;
+  cursor: pointer;
+  z-index: 2;
+  background: transparent;
+  outline: none;
+}
+.hotspot:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-      // 핫스팟
-      const hsNahyun   = document.getElementById("hs-nahyun");
-      const hsChulho   = document.getElementById("hs-chulho");
-      const hsJihye    = document.getElementById("hs-jihye");
-      const hsSuji     = document.getElementById("hs-suji");
-      const hsRokjeong = document.getElementById("hs-rokjeong");
-      const hsGuhee    = document.getElementById("hs-guhee");
-      const hsYonsoo   = document.getElementById("hs-yonsoo");
-      const hsKabmin   = document.getElementById("hs-kabmin");
+/* 각 캐릭터 좌표 (확정값 유지) */
+.nahyun-area   { left: 10.5%; top: 74%; width: 13%; height: 42%; border-radius: 0; }
+.chulho-area   { left: 24%;   top: 74%; width: 13%; height: 46%; border-radius: 0; }
+.jihye-area    { left: 38%;   top: 78%; width: 11%; height: 35%; border-radius: 0; }
+.suji-area     { left: 49%;   top: 64%; width: 10%; height: 55%; border-radius: 0; }
+.rokjeong-area { left: 60%;   top: 79%; width: 9%;  height: 37%; border-radius: 0; }
+.guhee-area    { left: 71%;   top: 70%; width: 12%; height: 40%; border-radius: 0; }
+.yonsoo-area   { left: 86%;   top: 72%; width: 16%; height: 56%; border-radius: 0; }
+.kabmin-area   { left: 33%;   top: 24%; width: 15%; height: 32%; border-radius: 0; }
 
-      // 문구
-      const defaultMessage =
-`우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
-누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
-함께라면 어떤 보스전도 두렵지 않습니다!
-각 캐릭터를 클릭하여 멤버별 특성을 확인해보세요`;
+/* 모달 + 영상 + 캡션(영상과 같은 레이어) */
+.video-modal {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,.6);
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  z-index: 120;
+}
+.video-modal.show { opacity: 1; pointer-events: auto; }
 
-      const NAHYUN   = { message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 \n무드메이커 나현", video: "videos/nahyun.mp4" };
-      const CHULHO   = { message: "힘과 추진력으로 무거운 프로젝트를 과감히 밀어붙이는 \n파워 플레이어 김철호", video: "videos/chulho.mp4" };
-      const JIHYE    = { message: "빠른 자료 정리와 꼼꼼한 지원으로 모험의 기초 체력을 책임지는 \n든든한 서포터 설지혜", video: "videos/jihye.mp4" };
-      const SUJI     = { message: "팀의 무드를 밝게 하고 위기에서 점프해 길을 열어주는 \n리더 김수지", video: "videos/suji.mp4" };
-      const ROKJEONG = { message: "아이디어를 빠르게 삼키고, 소화해서 팀 맞춤형으로 다시 내놓는 \n든든한 동료 정록정", video: "videos/rokjeong.mp4" };
-      const GUHEE    = { message: "변칙 플레이와 반전 아이디어로 예상을 깨고 새로운 길을 만들어내는 \n전략가 한구희", video: "videos/guhee.mp4" };
-      const YONSOO   = { message: "에너지와 열정으로 분위기를 불태우고, 새로운 도전을 두려워하지 않는 \n추진력 담당 박연수", video: "videos/yonsoo.mp4" };
-      const KABMIN   = { message: "pp1의 정신적 지주 갑민님", video: "videos/kabmin.mp4" };
+.video-wrap {
+  width: min(800px, 92vw);
+  aspect-ratio: 16/9;
+  position: relative; /* 캡션 위치 기준 */
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+#charVideo { width: 100%; height: 100%; display: block; }
 
-      // 타자 애니메이션 (Promise 반환)
-      let typerTimer;
-      function typeWriter(text, el, speed = 40) {
-        clearInterval(typerTimer);
-        el.textContent = "";
-        let i = 0;
-        return new Promise(resolve => {
-          typerTimer = setInterval(() => {
-            el.textContent += text[i] ?? "";
-            i++;
-            if (i >= text.length) {
-              clearInterval(typerTimer);
-              resolve();
-            }
-          }, speed);
-        });
-      }
+/* ▶ 영상 위 캡션 (같은 레이어) */
+.video-caption {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  bottom: 8%;
+  width: 92%;
+  text-align: center;
+  color: #fff;
+  font-family: 'Galmuri11', monospace;
+  font-size: clamp(16px, 2.2vw, 22px);
+  line-height: 1.6;
+  white-space: pre-line;
+  text-shadow: 0 2px 6px rgba(0,0,0,.55);
+  pointer-events: none;
+  z-index: 2;
+}
 
-      // 모달 열기/닫기 (문구는 모달 내부 캡션에 표시)
-      async function openVideo(src, message) {
-        // 상단 초기 문구는 가린다
-        introText.classList.add("hidden");
+.close-btn {
+  position: absolute; top: -12px; right: -12px;
+  background: #000; color: #fff; border: 0; cursor: pointer;
+  padding: 6px 10px;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+}
 
-        // 캡션 초기화 & 타자
-        videoCap.textContent = "";
-        await Promise.resolve(); // 렌더링 틱 보장
-        typeWriter(message, videoCap, 35);
-
-        // 비디오 세팅 & 모달 표시
-        charVideo.src = src;
-        charVideo.currentTime = 0;
-        videoModal.classList.add("show");
-        videoModal.setAttribute("aria-hidden", "false");
-        charVideo.play().catch(() => {});
-      }
-
-      function closeVideo() {
-        charVideo.pause();
-        charVideo.currentTime = 0;
-        videoModal.classList.remove("show");
-        videoModal.setAttribute("aria-hidden", "true");
-        charVideo.removeAttribute("src");
-        charVideo.load();
-        videoCap.textContent = "";
-      }
-
-      // 닫기 핸들
-      closeModal.addEventListener("click", closeVideo);
-      videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
-      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
-
-      // 초기: 기본 문구 출력 후 자동 숨김
-      window.addEventListener("DOMContentLoaded", async () => {
-        await typeWriter(defaultMessage, introText, 40);
-        setTimeout(() => introText.classList.add("hidden"), 3000);
-      });
-
-      // 로고 클릭 → 초기 문구 다시 보기
-      logoBtn.addEventListener("click", async () => {
-        introText.classList.remove("hidden");
-        await typeWriter(defaultMessage, introText, 40);
-        setTimeout(() => introText.classList.add("hidden"), 3000);
-      });
-
-      // 캐릭터 클릭 → 영상 + 모달 캡션(같은 레이어)
-      hsNahyun  .addEventListener("click", () => openVideo(NAHYUN.video,   NAHYUN.message));
-      hsChulho  .addEventListener("click", () => openVideo(CHULHO.video,   CHULHO.message));
-      hsJihye   .addEventListener("click", () => openVideo(JIHYE.video,    JIHYE.message));
-      hsSuji    .addEventListener("click", () => openVideo(SUJI.video,     SUJI.message));
-      hsRokjeong.addEventListener("click", () => openVideo(ROKJEONG.video, ROKJEONG.message));
-      hsGuhee   .addEventListener("click", () => openVideo(GUHEE.video,    GUHEE.message));
-      hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
-      hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
-    </script>
-  </body>
-</html>
+@media (max-width: 768px) {
+  .pixel-text { font-size: 16px; top: 64px; }
+}
