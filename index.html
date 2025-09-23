@@ -15,7 +15,7 @@
     </header>
 
     <main class="hero" role="main">
-      <!-- 반응형 고정 문구 -->
+      <!-- 반응형 고정 문구 (4줄 고정) -->
       <div class="pixel-text" id="introText" aria-live="polite"></div>
 
       <!-- 배경 아이템(히어로 전체, pp1 뒤) -->
@@ -39,7 +39,6 @@
     <!-- 영상 모달 -->
     <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="캐릭터 영상">
       <div class="video-wrap">
-        <!-- 재생 호환성 보강 -->
         <video id="charVideo"
                playsinline webkit-playsinline
                muted autoplay
@@ -72,7 +71,7 @@
       const hsYonsoo   = document.getElementById("hs-yonsoo");
       const hsKabmin   = document.getElementById("hs-kabmin");
 
-      // ===== 문구
+      // ===== 문구 (줄바꿈 포함 4줄)
       const defaultMessage =
 `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
@@ -106,7 +105,7 @@
         });
       }
 
-      // ===== ✅ 추가: 엘리먼트별 독립 타자 애니메이션
+      // ===== 엘리먼트별 독립 타자 애니메이션 (유지)
       const typerTimers = new WeakMap();
       function typeWriterEl(text, el, speed = 40) {
         const prev = typerTimers.get(el);
@@ -130,35 +129,24 @@
 
       // ===== 모달 열기/닫기
       async function openVideo(src, message) {
-        console.log('[openVideo] try open:', src);
-        // 캡션: 상단 문구와 독립적으로 타이핑
         videoCap.textContent = "";
         await Promise.resolve();
         typeWriterEl(message, videoCap, 35);
 
-        // 비디오 속성 선세팅
         charVideo.muted = true;
         charVideo.autoplay = true;
         charVideo.playsInline = true;
         charVideo.setAttribute('webkit-playsinline', '');
 
-        // 소스 지정 & 로드
         charVideo.src = src;
         charVideo.load();
 
-        // 모달 표시
         videoModal.classList.add("show");
         videoModal.setAttribute("aria-hidden", "false");
 
-        // 재생 시도 (UI 반영 뒤)
         setTimeout(() => {
           const p = charVideo.play();
-          if (p && typeof p.catch === 'function') {
-            p.catch(err => {
-              console.warn('[video play blocked]', err);
-              // 모바일 정책 등으로 자동재생이 막히면 사용자가 컨트롤로 재생 가능
-            });
-          }
+          if (p && typeof p.catch === 'function') p.catch(()=>{});
         }, 0);
       }
 
@@ -170,13 +158,11 @@
         charVideo.removeAttribute("src");
         charVideo.load();
 
-        // 캡션 타자 타이머 정리(선택)
         const capTimer = typerTimers.get(videoCap);
         if (capTimer) clearInterval(capTimer);
         videoCap.textContent = "";
       }
 
-      // 닫기 핸들
       closeModal.addEventListener("click", closeVideo);
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
@@ -184,7 +170,6 @@
       // ===== 초기: 문구 타이핑 (계속 노출)
       window.addEventListener("DOMContentLoaded", async () => {
         await typeWriterEl(defaultMessage, introText, 40);
-        console.log('[ready] hotspots bound');
       });
 
       // 로고 클릭 → 문구 타이핑만 다시
@@ -193,21 +178,15 @@
       });
 
       // ===== 캐릭터 클릭
-      const bind = (el, data, name) => {
-        if (!el) { console.warn('[bind fail]', name); return; }
-        el.addEventListener("click", () => {
-          console.log('[hotspot click]', name);
-          openVideo(data.video, data.message);
-        });
-      };
-      bind(hsNahyun,   NAHYUN,   'NAHYUN');
-      bind(hsChulho,   CHULHO,   'CHULHO');
-      bind(hsJihye,    JIHYE,    'JIHYE');
-      bind(hsSuji,     SUJI,     'SUJI');
-      bind(hsRokjeong, ROKJEONG, 'ROKJEONG');
-      bind(hsGuhee,    GUHEE,    'GUHEE');
-      bind(hsYonsoo,   YONSOO,   'YONSOO');
-      bind(hsKabmin,   KABMIN,   'KABMIN');
+      const bind = (el, data) => el && el.addEventListener("click", () => openVideo(data.video, data.message));
+      bind(hsNahyun,   NAHYUN);
+      bind(hsChulho,   CHULHO);
+      bind(hsJihye,    JIHYE);
+      bind(hsSuji,     SUJI);
+      bind(hsRokjeong, ROKJEONG);
+      bind(hsGuhee,    GUHEE);
+      bind(hsYonsoo,   YONSOO);
+      bind(hsKabmin,   KABMIN);
 
       // ===== 배경 아이템 낙하
       function imgFor(type){
