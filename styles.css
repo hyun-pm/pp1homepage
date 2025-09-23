@@ -67,6 +67,7 @@ body {
   position: relative;
   width: min(90vw, calc(65vh * 1.779));
   aspect-ratio: 2048 / 1151;
+  overflow: hidden; /* 흐르는 배경 잘림 */
 }
 .hero-image {
   width: 100%;
@@ -75,14 +76,14 @@ body {
   display: block;
 }
 
-/* 🌟 흐르는 배경 패턴 (전체 화면 뒤) */
+/* 🌟 흐르는 배경 패턴 (이미지 위, 핫스팟 아래) */
 .flow-bg{
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 0;          /* 최뒤 */
+  z-index: 1;          /* 이미지 위 */
   pointer-events: none;
-  overflow: hidden;
 }
+
 .sprite{
   position: absolute;
   width: var(--size);
@@ -103,10 +104,10 @@ body {
 /* 위로 흐르며 좌우로 살짝 흔들림 */
 @keyframes floatUp{
   0%   { transform: translateY(0)      rotate(var(--rot,0deg)); }
-  25%  { transform: translateY(-35vh)  translateX(10px) rotate(calc(var(--rot,0deg) + 6deg)); }
-  50%  { transform: translateY(-70vh)  translateX(0)    rotate(calc(var(--rot,0deg) + 10deg)); }
-  75%  { transform: translateY(-105vh) translateX(-10px)rotate(calc(var(--rot,0deg) + 6deg)); }
-  100% { transform: translateY(-140vh) rotate(var(--rot,0deg)); }
+  25%  { transform: translateY(-35%)   translateX(10px) rotate(calc(var(--rot,0deg) + 6deg)); }
+  50%  { transform: translateY(-70%)   translateX(0)    rotate(calc(var(--rot,0deg) + 10deg)); }
+  75%  { transform: translateY(-105%)  translateX(-10px)rotate(calc(var(--rot,0deg) + 6deg)); }
+  100% { transform: translateY(-140%)  rotate(var(--rot,0deg)); }
 }
 
 /* 핫스팟 (투명) */
@@ -115,7 +116,7 @@ body {
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
-  z-index: 2;           /* 콘텐츠 위 */
+  z-index: 2;           /* 흐르는 배경 위 */
   background: transparent;
   outline: none;
 }
