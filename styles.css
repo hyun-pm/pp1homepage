@@ -45,32 +45,27 @@ body {
   padding-top: 120px;
 }
 
-/* 반응형 문구 — pp1 폭에 맞춰 함께 축소. 4줄 고정(줄내 개행 금지) */
+/* 반응형 문구 — pp1 폭에 맞춰 축소, 자동 줄바꿈 허용 */
 .pixel-text {
   width: min(90vw, calc(65vh * 1.779));
   max-width: 90vw;
   margin: 0 auto 20px;
   text-align: center;
 
-  /* ✅ 크기만 반응형으로 줄임 (상한을 낮춰 넓은 화면에서도 잘림 방지) */
   font-size: clamp(12px, 1.4vw, 18px);
   line-height: 1.6;
 
-  /* 줄바꿈(\n)만 유지하고, 한 줄 안에서는 절대 줄바꿈 안 함 */
-  white-space: pre;          /* pre-line → pre 로 유지 */
+  /* ✅ 개행(\n)은 유지, 필요하면 자동 줄바꿈 허용 */
+  white-space: pre-wrap;
   word-break: keep-all;
-
-  /* 혹시라도 극단적인 화면에서 넘치면 보이지 않게(겹침 방지) */
-  overflow: hidden;
 
   z-index: 2;
 }
 
-/* 아주 큰 화면에서 글자가 너무 커져 잘리는 것 방지용 세이프가드 */
+/* 큰 화면 safeguard */
 @media (min-width: 1600px) {
   .pixel-text { font-size: 18px; }
 }
-/* 작은 화면에서는 더 빨리 줄여서 겹침 방지 */
 @media (max-width: 480px) {
   .pixel-text { font-size: clamp(11px, 3.6vw, 16px); }
 }
@@ -98,7 +93,7 @@ body {
   display: block;
 }
 
-/* 떨어지는 스프라이트 — 위→아래 직하강 */
+/* 떨어지는 스프라이트 */
 .sprite{
   position: absolute;
   width: var(--size);
@@ -115,29 +110,29 @@ body {
   100% { transform: translate3d(0,120vh,0); }
 }
 
-/* 핫스팟 (투명) */
+/* 핫스팟 */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
-  z-index: 3; /* 확실히 이미지 위 */
+  z-index: 3;
   background: transparent;
   outline: none;
 }
 .hotspot:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-/* 각 캐릭터 좌표 (확정값 유지) */
-.nahyun-area   { left: 10.5%; top: 74%; width: 13%; height: 42%; border-radius: 0; }
-.chulho-area   { left: 24%;   top: 74%; width: 13%; height: 46%; border-radius: 0; }
-.jihye-area    { left: 38%;   top: 78%; width: 11%; height: 35%; border-radius: 0; }
-.suji-area     { left: 49%;   top: 64%; width: 10%; height: 55%; border-radius: 0; }
-.rokjeong-area { left: 60%;   top: 79%; width: 9%;  height: 37%; border-radius: 0; }
-.guhee-area    { left: 71%;   top: 70%; width: 12%; height: 40%; border-radius: 0; }
-.yonsoo-area   { left: 86%;   top: 72%; width: 16%; height: 56%; border-radius: 0; }
-.kabmin-area   { left: 33%;   top: 24%; width: 15%; height: 32%; border-radius: 0; }
+/* 각 캐릭터 좌표 */
+.nahyun-area   { left: 10.5%; top: 74%; width: 13%; height: 42%; }
+.chulho-area   { left: 24%;   top: 74%; width: 13%; height: 46%; }
+.jihye-area    { left: 38%;   top: 78%; width: 11%; height: 35%; }
+.suji-area     { left: 49%;   top: 64%; width: 10%; height: 55%; }
+.rokjeong-area { left: 60%;   top: 79%; width: 9%;  height: 37%; }
+.guhee-area    { left: 71%;   top: 70%; width: 12%; height: 40%; }
+.yonsoo-area   { left: 86%;   top: 72%; width: 16%; height: 56%; }
+.kabmin-area   { left: 33%;   top: 24%; width: 15%; height: 32%; }
 
-/* 모달 + 영상 + 캡션 */
+/* 모달 */
 .video-modal {
   position: fixed; inset: 0;
   display: grid; place-items: center;
@@ -157,7 +152,7 @@ body {
 }
 #charVideo { width: 100%; height: 100%; display: block; }
 
-/* ▶ 영상 위 캡션 */
+/* 영상 위 캡션 */
 .video-caption {
   position: absolute;
   left: 50%; transform: translateX(-50%);
