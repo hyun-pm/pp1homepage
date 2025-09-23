@@ -1,114 +1,138 @@
-<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Super PPM</title>
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="color-scheme" content="light" />
-  </head>
-  <body>
-    <!-- 상단 로고/트리거 -->
-    <header class="topbar">
-      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행">
-        SUPERPPM
-      </button>
-    </header>
+/* 1) 로컬 갈무리11 폰트 등록 */
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
-    <!-- 상단 텍스트(타자 애니메이션 대상) -->
-    <div class="pixel-text" id="introText" aria-live="polite"></div>
+/* 2) 기본값 */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: 'Galmuri11', monospace;
+  background: #269CFE;
+  color: #fff;
+}
 
-    <!-- 메인 히어로: 그라데이션 + 중앙 이미지 + 클릭 핫스팟(나현: 전체 영역) -->
-    <main class="hero" role="main">
-      <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
+/* 3) 상단 바(로고 버튼) */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 56px; padding: 0 16px;
+  display: flex; align-items: center;
+  background: linear-gradient(#269CFEcc, #BDF4FFcc);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid #ffffff55;
+  z-index: 100;
+}
+.logo-btn {
+  font-family: 'Galmuri11', monospace;
+  font-weight: 700;
+  background: #000; color: #fff; border: 0; cursor: pointer;
+  padding: 8px 12px;
+  box-shadow:
+    0 0 0 2px #fff inset,
+    0 0 0 4px #000 inset,
+    2px 2px 0 0 #000;
+}
+.logo-btn:active { transform: translate(1px,1px); }
 
-      <!-- 🔵 나현 캐릭터 전체 클릭 영역 -->
-      <button
-        class="hotspot nahyun-area"
-        id="hs-nahyun"
-        aria-label="나현 캐릭터 열기">
-      </button>
-    </main>
+/* 4) 상단 텍스트(흰색만) */
+.pixel-text {
+  position: fixed;
+  top: 68px; left: 0; right: 0;
+  z-index: 90;
+  padding: 0 16px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #ffffff;
+  white-space: pre-line;
+  pointer-events: none;
+}
 
-    <!-- 🎬 플로팅 영상 모달 -->
-    <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="캐릭터 영상">
-      <div class="video-wrap">
-        <video id="charVideo" playsinline controls muted></video>
-        <button class="close-btn" id="closeModal" aria-label="영상 닫기">✕</button>
-      </div>
-    </div>
+/* 5) 히어로(배경 + 이미지) */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(#269CFE, #BDF4FF);
+  position: relative;
+  padding-top: 120px; /* 상단 텍스트가 겹치지 않도록 */
+}
+.hero-image {
+  max-width: 90%;
+  max-height: 65vh;
+  height: auto; display: block;
+}
 
-    <!-- 스크립트 -->
-    <script>
-      const introText  = document.getElementById("introText");
-      const logoBtn    = document.getElementById("logoBtn");
-      const hsNahyun   = document.getElementById("hs-nahyun");
+/* 6) 캐릭터 핫스팟 (클릭 영역 공통) */
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  z-index: 20; /* 이미지 위로 */
+  /* 개발 중 위치 보기 원하면 잠깐 켜기
+  outline: 2px dashed rgba(255,255,255,.7);
+  background: rgba(255,255,255,.08);
+  */
+}
+.hotspot:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
 
-      // 기본 소개 문구
-      const defaultMessage = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
-누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
-함께라면 어떤 보스전도 두렵지 않습니다!`;
+/* 6-1) 나현 캐릭터 전체 영역 (대략치) */
+.nahyun-area {
+  /* 중심좌표 (이미지 기준 비율) */
+  left: 20%;
+  top: 66%;
+  /* 크기(가로/세로) — 캐릭터를 넓게 덮도록 */
+  width: 14vw;      /* 필요 시 12~18vw 사이 조정 */
+  height: 34vh;     /* 필요 시 28~38vh 사이 조정 */
+  border-radius: 0; /* 직사각형 */
+}
 
-      // 나현 캐릭터 데이터
-      const NAHYUN = {
-        message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 무드메이커",
-        video: "videos/nahyun.mp4" // 나중에 파일 올리면 자동 재생됨
-      };
+/* 7) 비디오 모달 */
+.video-modal {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,.6);
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  z-index: 120;
+}
+.video-modal.show { opacity: 1; pointer-events: auto; }
+.video-wrap {
+  width: min(800px, 92vw);
+  aspect-ratio: 16/9;
+  position: relative;
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+#charVideo { width: 100%; height: 100%; display: block; }
+.close-btn {
+  position: absolute; top: -12px; right: -12px;
+  background: #000; color: #fff; border: 0; cursor: pointer;
+  padding: 6px 10px;
+  box-shadow:
+    0 0 0 2px #fff inset,
+    0 0 0 4px #000 inset,
+    2px 2px 0 0 #000;
+}
 
-      // 모달 핸들
-      const videoModal = document.getElementById("videoModal");
-      const closeModal = document.getElementById("closeModal");
-      const charVideo  = document.getElementById("charVideo");
-
-      let timer;
-      function typeWriter(text, el, speed = 40) {
-        clearInterval(timer);
-        el.textContent = "";
-        let i = 0;
-        timer = setInterval(() => {
-          el.textContent += text[i] ?? "";
-          i++;
-          if (i >= text.length) clearInterval(timer);
-        }, speed);
-      }
-
-      // 모달 열고 닫기
-      function openVideo(src) {
-        if (!src) return;
-        charVideo.src = src;
-        charVideo.currentTime = 0;
-        videoModal.classList.add("show");
-        videoModal.setAttribute("aria-hidden", "false");
-        charVideo.play().catch(() => {});
-      }
-      function closeVideo() {
-        charVideo.pause();
-        charVideo.currentTime = 0;
-        videoModal.classList.remove("show");
-        videoModal.setAttribute("aria-hidden", "true");
-        charVideo.removeAttribute("src");
-        charVideo.load();
-      }
-
-      closeModal.addEventListener("click", closeVideo);
-      videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
-      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
-
-      // 첫 진입 기본 문구 애니메이션
-      window.addEventListener("DOMContentLoaded", () => {
-        typeWriter(defaultMessage, introText, 40);
-      });
-
-      // 로고 클릭 → 기본 문구 다시 시작
-      logoBtn.addEventListener("click", () => {
-        typeWriter(defaultMessage, introText, 40);
-      });
-
-      // 나현 클릭 → 문구 교체 + (있다면) 영상 모달
-      hsNahyun.addEventListener("click", () => {
-        typeWriter(NAHYUN.message, introText, 35);
-        openVideo(NAHYUN.video);
-      });
-    </script>
-  </body>
-</html>
+/* 8) 반응형 */
+@media (max-width: 768px) {
+  .pixel-text { font-size: 16px; top: 64px; }
+  .hero-image  { max-width: 94%; max-height: 58vh; }
+  .nahyun-area { width: 30vw; height: 32vh; left: 22%; top: 66%; }
+}
