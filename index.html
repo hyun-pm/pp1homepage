@@ -173,14 +173,14 @@
           s.style.setProperty('--size', size + 'px');
           s.style.backgroundImage = `url('${imgFor(t)}')`;
           s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';   // ✅ 0~1초만 지연
-          s.style.animationDuration = (10 + Math.random() * 10).toFixed(2) + 's'; // 10~20s로 낙하
+          s.style.animationDuration = (15 + Math.random() * 10).toFixed(2) + 's'; // 10~20s로 낙하
 
           flowBg.appendChild(s);
         }
       }
 
       // 초기 시드
-      seedFlow(40);
+      seedFlow(25);
 
       // 리사이즈 시 재시드
       let flowTimer;
