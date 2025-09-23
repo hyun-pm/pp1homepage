@@ -14,6 +14,9 @@
       </button>
     </header>
 
+    <!-- 🌟 흐르는 배경 패턴 (화면 전체, 가장 뒤) -->
+    <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
+
     <!-- 초기 문구: 처음만 노출 후 자동 숨김 -->
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
@@ -97,15 +100,11 @@
 
       // 모달 열기/닫기 (문구는 모달 내부 캡션에 표시)
       async function openVideo(src, message) {
-        // 상단 초기 문구는 가린다
         introText.classList.add("hidden");
-
-        // 캡션 초기화 & 타자
         videoCap.textContent = "";
-        await Promise.resolve(); // 렌더링 틱 보장
+        await Promise.resolve();
         typeWriter(message, videoCap, 35);
 
-        // 비디오 세팅 & 모달 표시
         charVideo.src = src;
         charVideo.currentTime = 0;
         videoModal.classList.add("show");
@@ -141,7 +140,7 @@
         setTimeout(() => introText.classList.add("hidden"), 3000);
       });
 
-      // 캐릭터 클릭 → 영상 + 모달 캡션(같은 레이어)
+      // 캐릭터 클릭
       hsNahyun  .addEventListener("click", () => openVideo(NAHYUN.video,   NAHYUN.message));
       hsChulho  .addEventListener("click", () => openVideo(CHULHO.video,   CHULHO.message));
       hsJihye   .addEventListener("click", () => openVideo(JIHYE.video,    JIHYE.message));
@@ -150,6 +149,53 @@
       hsGuhee   .addEventListener("click", () => openVideo(GUHEE.video,    GUHEE.message));
       hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
       hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
+
+      /* 🌟 흐르는 배경 시드 */
+      const flowBg = document.getElementById('flowBg');
+
+      function imgFor(type){
+        // 이미지가 다른 폴더면 여기 경로만 변경
+        if (type === 'heart') return 'heart.png';
+        if (type === 'star')  return 'star.png';
+        return 'box.png';
+      }
+
+      function seedFlow(total = 36) {
+        if (!flowBg) return;
+        flowBg.innerHTML = '';
+        const types = ['heart','star','box'];
+        for (let i = 0; i < total; i++) {
+          const t = types[i % types.length];
+          const s = document.createElement('span');
+          s.className = `sprite ${t}`;
+          s.style.left = (Math.random() * 100).toFixed(2) + 'vw';
+          // -20~120vh에서 시작 → 위로 흘러감
+          s.style.top  = (-20 + Math.random() * 140).toFixed(2) + 'vh';
+
+          // 크기/속도/지연
+          const size = 22 + Math.random() * 32; // 22~54px
+          s.style.setProperty('--size', size + 'px');
+          s.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
+          s.style.animationDuration = (10 + Math.random() * 12).toFixed(2) + 's';
+          // 약한 회전
+          s.style.setProperty('--rot', (-20 + Math.random()*40).toFixed(1) + 'deg');
+
+          // 이미지 지정
+          s.style.backgroundImage = `url('${imgFor(t)}')`;
+
+          flowBg.appendChild(s);
+        }
+      }
+
+      // 초기 시드 (숫자 조절로 밀도 조정)
+      seedFlow(34);
+
+      // 창 크기 변경 시 위치 살짝 리셋
+      let flowTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(flowTimer);
+        flowTimer = setTimeout(() => seedFlow(34), 200);
+      });
     </script>
   </body>
 </html>
