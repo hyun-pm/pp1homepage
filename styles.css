@@ -17,6 +17,7 @@ body {
   color: #fff;
 }
 
+/* 상단 바 */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0;
   height: 56px; padding: 0 16px;
@@ -31,12 +32,11 @@ body {
   font-weight: 700;
   background: #000; color: #fff; border: 0; cursor: pointer;
   padding: 8px 12px;
-  box-shadow: 0 0 0 2px #fff inset,
-              0 0 0 4px #000 inset,
-              2px 2px 0 0 #000;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
 }
 .logo-btn:active { transform: translate(1px,1px); }
 
+/* 초기 상단 텍스트 */
 .pixel-text {
   position: fixed;
   top: 68px; left: 0; right: 0;
@@ -49,9 +49,12 @@ body {
   color: #ffffff;
   white-space: pre-line;
   pointer-events: none;
+  opacity: 1;
+  transition: opacity .4s ease;
 }
+.pixel-text.hidden { opacity: 0; pointer-events: none; }
 
-/* 히어로 영역 */
+/* 히어로 */
 .hero {
   min-height: 100vh;
   display: grid;
@@ -72,42 +75,29 @@ body {
   display: block;
 }
 
-/* 공통 핫스팟 (빨간 박스 ON) */
+/* 핫스팟 (투명) */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
   z-index: 2;
-  outline: 2px dashed red;
-  background: rgba(255,0,0,0.2);
+  background: transparent;
+  outline: none;
 }
+.hotspot:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-/* 나현 */
-.nahyun-area { left: 10.5%; top: 74%; width: 13%; height: 42%; border-radius: 0; }
+/* 각 캐릭터 좌표 (확정값 유지) */
+.nahyun-area   { left: 10.5%; top: 74%; width: 13%; height: 42%; border-radius: 0; }
+.chulho-area   { left: 24%;   top: 74%; width: 13%; height: 46%; border-radius: 0; }
+.jihye-area    { left: 38%;   top: 78%; width: 11%; height: 35%; border-radius: 0; }
+.suji-area     { left: 49%;   top: 64%; width: 10%; height: 55%; border-radius: 0; }
+.rokjeong-area { left: 60%;   top: 79%; width: 9%;  height: 37%; border-radius: 0; }
+.guhee-area    { left: 71%;   top: 70%; width: 12%; height: 40%; border-radius: 0; }
+.yonsoo-area   { left: 86%;   top: 72%; width: 16%; height: 56%; border-radius: 0; }
+.kabmin-area   { left: 33%;   top: 24%; width: 15%; height: 32%; border-radius: 0; }
 
-/* 철호 */
-.chulho-area { left: 24%;  top: 74%; width: 13%; height: 46%; border-radius: 0; }
-
-/* 설지혜 */
-.jihye-area  { left: 38%;  top: 78%; width: 11%; height: 35%; border-radius: 0; }
-
-/* 김수지(피치 공주) */
-.suji-area   { left: 49%;  top: 64%; width: 10%; height: 55%; border-radius: 0; }
-
-/* 정록정(요시) */
-.rokjeong-area { left: 60%; top: 79%; width: 9%;  height: 37%; border-radius: 0; }
-
-/* 한구희(와루이지) */
-.guhee-area { left: 71%; top: 70%; width: 12%; height: 40%; border-radius: 0; }
-
-/* 박연수(쿠파) */
-.yonsoo-area { left: 86%; top: 72%; width: 16%; height: 56%; border-radius: 0; }
-
-/* 김갑민(마리오) — 시작 좌표(좌측 상단). 필요 시 1~2% 단위로 조정 */
-.kabmin-area { left: 33%; top: 24%; width: 15%; height: 32%; border-radius: 0; }
-
-/* 모달 */
+/* 모달 + 영상 + 캡션(영상과 같은 레이어) */
 .video-modal {
   position: fixed; inset: 0;
   display: grid; place-items: center;
@@ -116,21 +106,38 @@ body {
   z-index: 120;
 }
 .video-modal.show { opacity: 1; pointer-events: auto; }
+
 .video-wrap {
   width: min(800px, 92vw);
   aspect-ratio: 16/9;
-  position: relative;
+  position: relative; /* 캡션 위치 기준 */
   background: #000;
   box-shadow: 0 10px 30px rgba(0,0,0,.4);
 }
 #charVideo { width: 100%; height: 100%; display: block; }
+
+/* ▶ 영상 위 캡션 (같은 레이어) */
+.video-caption {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  bottom: 8%;
+  width: 92%;
+  text-align: center;
+  color: #fff;
+  font-family: 'Galmuri11', monospace;
+  font-size: clamp(16px, 2.2vw, 22px);
+  line-height: 1.6;
+  white-space: pre-line;
+  text-shadow: 0 2px 6px rgba(0,0,0,.55); /* 가독성 */
+  pointer-events: none; /* 클릭은 비디오로 전달 */
+  z-index: 2;          /* 비디오 위 */
+}
+
 .close-btn {
   position: absolute; top: -12px; right: -12px;
   background: #000; color: #fff; border: 0; cursor: pointer;
   padding: 6px 10px;
-  box-shadow: 0 0 0 2px #fff inset,
-              0 0 0 4px #000 inset,
-              2px 2px 0 0 #000;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
 }
 
 @media (max-width: 768px) {
