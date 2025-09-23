@@ -18,10 +18,10 @@
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
     <main class="hero" role="main">
-      <div class="hero-figure">
-        <!-- ✅ pp1 이미지 '뒤'에 배경 스프라이트 -->
-        <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
+      <!-- ✅ 흐르는 배경 패턴: .hero 전체를 덮음 (pp1 이미지 ‘뒤’) -->
+      <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
 
+      <div class="hero-figure">
         <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
 
         <!-- 캐릭터 핫스팟들 (투명) -->
@@ -146,61 +146,51 @@
       hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
       hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
 
-      /* 🌟 흐르는 배경 시드 (pp1 뒤, hero-figure 안) */
+      /* 🌟 흐르는 배경 시드 (.hero 전체 기준) */
       const flowBg = document.getElementById('flowBg');
-      const figure = document.querySelector('.hero-figure');
 
       function imgFor(type){
-        // 이미지가 다른 폴더면 여기 경로만 변경
+        // 이미지가 같은 루트에 있으므로 상대경로 그대로 사용
         if (type === 'heart') return './heart.png';
         if (type === 'star')  return './star.png';
         return './box.png';
       }
 
       function seedFlow(total = 36) {
-        if (!flowBg || !figure) return;
-        const rect = figure.getBoundingClientRect();
+        if (!flowBg) return;
         flowBg.innerHTML = '';
         const types = ['heart','star','box'];
-
         for (let i = 0; i < total; i++) {
           const t = types[i % types.length];
           const s = document.createElement('span');
           s.className = `sprite ${t}`;
 
-          // 시작 위치: 컨테이너 상단 바깥(-20%~0%), 가로 0~100%
-          s.style.left = (Math.random() * 100).toFixed(2) + '%';
-          s.style.top  = (-20 + Math.random() * 20).toFixed(2) + '%';
+          // 화면 밖 위쪽에서 시작해 ↘로 떨어짐
+          s.style.left = (-10 + Math.random() * 120).toFixed(2) + 'vw';  // -10~110vw
+          s.style.top  = (-30 + Math.random() * 10).toFixed(2) + 'vh';   // -30~-20vh
 
-          // 크기: 40~70px
-          const size = 40 + Math.random() * 30;
+          const size = 28 + Math.random() * 28; // 28~56px
           s.style.setProperty('--size', size + 'px');
-
-          // 이동 거리: 컨테이너 폭/높이 기준으로 대각선(↘)
-          const dx = (0.25 + Math.random() * 0.45) * rect.width;   // 25%~70% 가로
-          const dy = (0.90 + Math.random() * 0.90) * rect.height;  // 90%~180% 세로
-          s.style.setProperty('--dx', dx + 'px');
-          s.style.setProperty('--dy', dy + 'px');
-
-          // 타이밍
-          s.style.animationDelay    = (Math.random() * 5).toFixed(2) + 's';
-          s.style.animationDuration = (10 + Math.random() * 10).toFixed(2) + 's';
-
-          // 이미지 지정 (불투명)
           s.style.backgroundImage = `url('${imgFor(t)}')`;
+
+          // 각자 다른 속도/지연
+          s.style.animationDelay    = (Math.random() * 6).toFixed(2) + 's';
+          s.style.animationDuration = (12 + Math.random() * 12).toFixed(2) + 's';
+          // 좌우 부드러운 드리프트 폭
+          s.style.setProperty('--drift', (5 + Math.random()*15).toFixed(1) + 'vw');
 
           flowBg.appendChild(s);
         }
       }
 
       // 초기 시드
-      window.addEventListener('load', () => seedFlow(34));
+      seedFlow(40);
 
-      // 리사이즈 시 재시드(컨테이너 크기 반영)
+      // 리사이즈 시 재시드
       let flowTimer;
       window.addEventListener('resize', () => {
         clearTimeout(flowTimer);
-        flowTimer = setTimeout(() => seedFlow(34), 200);
+        flowTimer = setTimeout(() => seedFlow(40), 200);
       });
     </script>
   </body>
