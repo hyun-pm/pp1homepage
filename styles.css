@@ -24,7 +24,7 @@ body {
 }
 
 /* 3) 상단 바(로고 버튼) */
-.topbar{
+.topbar {
   position: fixed; top: 0; left: 0; right: 0;
   height: 56px; padding: 0 16px;
   display: flex; align-items: center;
@@ -33,7 +33,7 @@ body {
   border-bottom: 2px solid #ffffff55;
   z-index: 100;
 }
-.logo-btn{
+.logo-btn {
   font-family: 'Galmuri11', monospace;
   font-weight: 700;
   background: #000; color: #fff; border: 0; cursor: pointer;
@@ -45,33 +45,32 @@ body {
 }
 .logo-btn:active { transform: translate(1px,1px); }
 
-/* 4) 상단 픽셀 텍스트(2비트 느낌) */
-.pixel-text{
+/* 4) 상단 텍스트 (외곽선 제거 → 순수 흰색만) */
+.pixel-text {
   position: fixed;
   top: 68px; /* 상단바 아래 */
   left: 0; right: 0;
   z-index: 90;
   padding: 0 16px;
   text-align: center;
+  font-family: 'Galmuri11', monospace;
   font-weight: 400;
   font-size: 20px;
   line-height: 1.6;
-  text-shadow:
-    1px 1px 0 #000, -1px -1px 0 #000,
-    1px -1px 0 #000, -1px 1px 0 #000;
-  white-space: pre-line;   /* 줄바꿈 유지 */
-  pointer-events: none;    /* 클릭 방해 X */
+  color: #ffffff;     /* 흰색 글자 */
+  white-space: pre-line; /* 줄바꿈 유지 */
+  pointer-events: none;  /* 클릭 방해 X */
 }
 
 /* 5) 히어로(배경 + 이미지) */
-.hero{
+.hero {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(#269CFE, #BDF4FF);
   position: relative;
   padding-top: 120px; /* 상단 텍스트가 겹치지 않도록 여백 */
 }
-.hero-image{
+.hero-image {
   max-width: 90%;
   max-height: 65vh;   /* ↑ 여백 더 원하면 60~70vh로 조절 */
   height: auto;
@@ -79,7 +78,7 @@ body {
 }
 
 /* 6) 반응형 */
-@media (max-width: 768px){
-  .pixel-text{ font-size: 16px; top: 64px; }
-  .hero-image{ max-width: 94%; max-height: 58vh; }
+@media (max-width: 768px) {
+  .pixel-text { font-size: 16px; top: 64px; }
+  .hero-image { max-width: 94%; max-height: 58vh; }
 }
