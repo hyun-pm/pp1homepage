@@ -45,23 +45,34 @@ body {
   padding-top: 120px;
 }
 
-/* 반응형 문구 — pp1 폭에 맞춰 같이 축소. 4줄 고정(줄내 개행 금지) */
+/* 반응형 문구 — pp1 폭에 맞춰 함께 축소. 4줄 고정(줄내 개행 금지) */
 .pixel-text {
   width: min(90vw, calc(65vh * 1.779));
   max-width: 90vw;
   margin: 0 auto 20px;
   text-align: center;
 
-  /* ✅ 크기만 반응형으로 줄이고, 줄내 개행은 금지 */
-  font-size: clamp(12px, 1.9vw, 20px);
+  /* ✅ 크기만 반응형으로 줄임 (상한을 낮춰 넓은 화면에서도 잘림 방지) */
+  font-size: clamp(12px, 1.4vw, 18px);
   line-height: 1.6;
 
   /* 줄바꿈(\n)만 유지하고, 한 줄 안에서는 절대 줄바꿈 안 함 */
-  white-space: pre;         /* 기존 pre-line → pre */
+  white-space: pre;          /* pre-line → pre 로 유지 */
   word-break: keep-all;
-  overflow: hidden;         /* 혹시라도 넘치면 잘라냄 */
+
+  /* 혹시라도 극단적인 화면에서 넘치면 보이지 않게(겹침 방지) */
+  overflow: hidden;
 
   z-index: 2;
+}
+
+/* 아주 큰 화면에서 글자가 너무 커져 잘리는 것 방지용 세이프가드 */
+@media (min-width: 1600px) {
+  .pixel-text { font-size: 18px; }
+}
+/* 작은 화면에서는 더 빨리 줄여서 겹침 방지 */
+@media (max-width: 480px) {
+  .pixel-text { font-size: clamp(11px, 3.6vw, 16px); }
 }
 
 /* 배경 아이템 레이어 */
