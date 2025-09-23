@@ -58,14 +58,12 @@ body {
   place-items: center;
   background: linear-gradient(#269CFE, #BDF4FF);
   position: relative;
-  padding-top: 120px; /* 상단 텍스트랑 겹치지 않도록 */
+  padding-top: 120px;
 }
-
-/* ▶ 이미지와 핫스팟 기준이 되는 래퍼 */
 .hero-figure {
   position: relative;
-  width: min(90vw, calc(65vh * 1.779)); /* 이미지 비율 유지 */
-  aspect-ratio: 2048 / 1151; /* 원본 pp1.png 비율 */
+  width: min(90vw, calc(65vh * 1.779));
+  aspect-ratio: 2048 / 1151;
 }
 .hero-image {
   width: 100%;
@@ -74,7 +72,7 @@ body {
   display: block;
 }
 
-/* 공통 핫스팟 스타일 (개발 가이드: 빨간 박스 ON) */
+/* 공통 핫스팟 스타일 (빨간 박스 ON) */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -85,7 +83,7 @@ body {
   background: rgba(255,0,0,0.2);
 }
 
-/* ✅ 나현 (확정 좌표) */
+/* 나현 */
 .nahyun-area {
   left: 10.5%;
   top: 74%;
@@ -94,12 +92,21 @@ body {
   border-radius: 0;
 }
 
-/* ✅ 철호(동키콩) — 시작 좌표(거의 맞음). 필요 시 0.5~1% 단위로 미세 조정 */
+/* 철호 */
 .chulho-area {
   left: 24%;
   top: 74%;
   width: 13%;
   height: 46%;
+  border-radius: 0;
+}
+
+/* 설지혜 */
+.jihye-area {
+  left: 43%;
+  top: 78%;
+  width: 11%;
+  height: 35%;
   border-radius: 0;
 }
 
