@@ -13,7 +13,7 @@
 html, body { height: 100%; margin: 0; }
 body {
   font-family: 'Galmuri11', monospace;
-  background: linear-gradient(#269CFE, #BDF4FF);
+  background: #269CFE;
   color: #fff;
 }
 
@@ -28,7 +28,6 @@ body {
   z-index: 100;
 }
 .logo-btn {
-  font-family: 'Galmuri11', monospace;
   font-weight: 700;
   background: #000; color: #fff; border: 0; cursor: pointer;
   padding: 8px 12px;
@@ -43,10 +42,8 @@ body {
   z-index: 90;
   padding: 0 16px;
   text-align: center;
-  font-weight: 400;
   font-size: 20px;
   line-height: 1.6;
-  color: #ffffff;
   white-space: pre-line;
   pointer-events: none;
   opacity: 1;
@@ -54,46 +51,66 @@ body {
 }
 .pixel-text.hidden { opacity: 0; pointer-events: none; }
 
-/* 히어로 */
+/* 히어로 (그라데이션 배경) */
 .hero {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  position: relative;
+  background: linear-gradient(#269CFE, #BDF4FF);
+  position: relative;   /* ✅ flow-bg의 기준 컨테이너 */
   padding-top: 120px;
 }
+
+/* ✅ 흐르는 배경: .hero 전체 뒤 레이어 */
+.flow-bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;          /* pp1 이미지(.hero-figure)보다 뒤 */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* pp1 이미지 레이어 */
 .hero-figure {
   position: relative;
   width: min(90vw, calc(65vh * 1.779));
   aspect-ratio: 2048 / 1151;
-  overflow: hidden; /* 배경 스프라이트를 컨테이너 안으로 클리핑 */
+  z-index: 1;          /* flow-bg 위 */
 }
-
-/* ✅ pp1 뒤 배경 스프라이트 레이어 */
-.flow-bg{
-  position: absolute;
-  inset: 0;
-  z-index: 0;          /* 이미지보다 아래 */
-  pointer-events: none;
-}
-
-/* pp1 메인 이미지 */
 .hero-image {
-  position: relative;
-  z-index: 1;          /* 배경 위 */
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
 }
 
-/* 핫스팟은 이미지 위 */
+/* 떨어지는 스프라이트 */
+.sprite{
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 1;  /* 배경이므로 100% */
+  transform: translate3d(0,0,0);
+  animation: fallDiag linear infinite;
+  will-change: transform;
+}
+
+/* ↘ 대각선 낙하 + 좌우 드리프트 */
+@keyframes fallDiag{
+  0%   { transform: translate3d(0,   -20vh, 0); }
+  50%  { transform: translate3d(calc(var(--drift) / 2), 50vh, 0); }
+  100% { transform: translate3d(var(--drift), 120vh, 0); }
+}
+
+/* 핫스팟 (투명) */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
-  z-index: 2;           /* 이미지/배경보다 위 */
+  z-index: 2;           /* 이미지 위 */
   background: transparent;
   outline: none;
 }
@@ -108,27 +125,6 @@ body {
 .guhee-area    { left: 71%;   top: 70%; width: 12%; height: 40%; border-radius: 0; }
 .yonsoo-area   { left: 86%;   top: 72%; width: 16%; height: 56%; border-radius: 0; }
 .kabmin-area   { left: 33%;   top: 24%; width: 15%; height: 32%; border-radius: 0; }
-
-/* 🎞️ 배경 리소스 스프라이트 */
-.sprite{
-  position: absolute;
-  width: var(--size);
-  height: var(--size);
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 1; /* 배경이지만 100% 불투명 */
-  transform: translate3d(0,0,0);
-  animation-name: fallDiag;              /* 대각선 하강 */
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform;
-}
-
-/* ↘ 컨테이너 크기 기준으로 대각선 이동 */
-@keyframes fallDiag{
-  0%   { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(var(--dx, 30vw), var(--dy, 120vh), 0); }
-}
 
 /* 모달 + 영상 + 캡션 */
 .video-modal {
