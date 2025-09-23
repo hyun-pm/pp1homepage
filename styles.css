@@ -11,7 +11,11 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
-body { font-family: 'Galmuri11', monospace; background: #269CFE; color: #fff; }
+body {
+  font-family: 'Galmuri11', monospace;
+  background: #269CFE;
+  color: #fff;
+}
 
 .topbar {
   position: fixed; top: 0; left: 0; right: 0;
@@ -47,45 +51,52 @@ body { font-family: 'Galmuri11', monospace; background: #269CFE; color: #fff; }
   pointer-events: none;
 }
 
+/* 히어로 영역 */
 .hero {
   min-height: 100vh;
   display: grid;
   place-items: center;
   background: linear-gradient(#269CFE, #BDF4FF);
   position: relative;
-  padding-top: 120px;
+  padding-top: 120px; /* 상단 텍스트랑 겹치지 않도록 */
 }
+
+/* ▶ 이미지와 핫스팟 기준이 되는 래퍼 */
 .hero-figure {
   position: relative;
-  width: min(90vw, calc(65vh * 1.779));
-  aspect-ratio: 2048 / 1151; /* 원본 이미지 비율 */
+  width: min(90vw, calc(65vh * 1.779)); /* 이미지 비율 유지 */
+  aspect-ratio: 2048 / 1151; /* 원본 pp1.png 비율 */
 }
 .hero-image {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
 }
 
-/* 클릭 핫스팟 공통 */
+/* 공통 핫스팟 스타일 */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
   z-index: 2;
+
   /* 🔴 개발용 가이드 (빨간 박스) */
-  outline: 2px dashed rgba(255,0,0,.9);
-  background: rgba(255,0,0,.2);
+  outline: 2px dashed red;
+  background: rgba(255,0,0,0.2);
 }
 
-/* 나현 캐릭터 정확한 위치 (시작값) */
+/* 나현 캐릭터 영역 (조정된 값) */
 .nahyun-area {
-  left: 18.5%;
-  top: 72%;
-  width: 12%;
-  height: 36%;
+  left: 19.5%;   /* x 위치 (왼↔오른쪽) */
+  top: 74%;      /* y 위치 (위↔아래) */
+  width: 13%;    /* 가로 크기 */
+  height: 42%;   /* 세로 크기 */
+  border-radius: 0;
 }
 
+/* 모달 */
 .video-modal {
   position: fixed; inset: 0;
   display: grid; place-items: center;
