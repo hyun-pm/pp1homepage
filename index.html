@@ -19,10 +19,10 @@
 
     <main class="hero" role="main">
       <div class="hero-figure">
-        <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
-
-        <!-- 🌟 흐르는 배경 패턴 (이미지 위, 핫스팟 아래) -->
+        <!-- 🟡 흐르는 배경을 pp1 이미지 '뒤'에 배치 -->
         <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
+
+        <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
 
         <!-- 캐릭터 핫스팟들 (투명) -->
         <button class="hotspot nahyun-area"   id="hs-nahyun"   aria-label="나현 캐릭터 열기"></button>
@@ -149,7 +149,7 @@
       hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
       hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
 
-      /* 🌟 흐르는 배경 시드 */
+      /* 🌟 흐르는 배경 시드 (pp1 뒤, hero-figure 안에서) */
       const flowBg = document.getElementById('flowBg');
 
       function imgFor(type){
@@ -163,23 +163,23 @@
         if (!flowBg) return;
         flowBg.innerHTML = '';
         const types = ['heart','star','box'];
+
         for (let i = 0; i < total; i++) {
           const t = types[i % types.length];
           const s = document.createElement('span');
           s.className = `sprite ${t}`;
-          // hero-figure 안에서 위치
-          s.style.left = (Math.random() * 100).toFixed(2) + '%';
-          s.style.top  = (Math.random() * 100).toFixed(2) + '%';
 
-          // 크기/속도/지연
-          const size = 22 + Math.random() * 32; // 22~54px
+          /* 시작 위치: 화면 위쪽 바깥(-30~0vh), 가로는 -10~110vw (약간 바깥에서 시작) */
+          s.style.left = (-10 + Math.random() * 120).toFixed(2) + 'vw';
+          s.style.top  = (-30 + Math.random() * 30).toFixed(2) + 'vh';
+
+          /* 크기/속도/지연 */
+          const size = 40 + Math.random() * 30; // 40~70px(비율 유지)
           s.style.setProperty('--size', size + 'px');
-          s.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
-          s.style.animationDuration = (10 + Math.random() * 12).toFixed(2) + 's';
-          // 약한 회전
-          s.style.setProperty('--rot', (-20 + Math.random()*40).toFixed(1) + 'deg');
+          s.style.animationDelay = (Math.random() * 5).toFixed(2) + 's';
+          s.style.animationDuration = (10 + Math.random() * 10).toFixed(2) + 's';
 
-          // 이미지 지정
+          /* 이미지 지정 (불투명 100%) */
           s.style.backgroundImage = `url('${imgFor(t)}')`;
 
           flowBg.appendChild(s);
