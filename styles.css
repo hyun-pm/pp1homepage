@@ -28,7 +28,7 @@ body {
   z-index: 100;
 }
 .logo-btn {
-  font-family: 'Galmuri11', monospace; /* 갈무리 폰트 적용 */
+  font-family: 'Galmuri11', monospace; /* 갈무리 폰트 */
   font-weight: 700;
   background: #000; color: #fff; border: 0; cursor: pointer;
   padding: 8px 12px;
@@ -36,32 +36,29 @@ body {
 }
 .logo-btn:active { transform: translate(1px,1px); }
 
-/* 초기 상단 텍스트 (항상 보임) */
-.pixel-text {
-  position: fixed;
-  top: 68px; left: 0; right: 0;
-  z-index: 90;
-  padding: 0 16px;
-  text-align: center;
-  font-size: 20px;
-  line-height: 1.6;
-  white-space: pre-line;
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity .4s ease;
-}
-.pixel-text.hidden { opacity: 0; pointer-events: none; } /* 남겨두되 JS에서 안 씀 */
-
 /* 히어로 (그라데이션 배경) */
 .hero {
   min-height: 100vh;
-  display: grid; place-items: center;
+  display: grid;
+  place-items: center;
   background: linear-gradient(#269CFE, #BDF4FF);
   position: relative;   /* flow-bg 기준 */
   padding-top: 120px;
 }
 
-/* 흐르는 배경: .hero 전체 뒤 레이어 */
+/* ✅ 반응형 문구: 이미지 폭에 맞춰 함께 줄어듦 */
+.pixel-text {
+  width: min(90vw, calc(65vh * 1.779)); /* hero-figure와 동일 폭 */
+  max-width: 90vw;
+  margin: 0 auto 20px;                  /* 중앙 정렬 + 아래 여백 */
+  text-align: center;
+  font-size: clamp(14px, 2.2vw, 20px);  /* 반응형 폰트 크기 */
+  line-height: 1.6;
+  white-space: pre-line;
+  z-index: 2;                           /* 배경 위, 이미지와 겹치지 않게 상단 배치 */
+}
+
+/* 배경 아이템 레이어 */
 .flow-bg{
   position: absolute;
   inset: 0;
@@ -96,7 +93,6 @@ body {
   animation: fallDown linear infinite;
   will-change: transform;
 }
-
 /* 직하강 */
 @keyframes fallDown{
   0%   { transform: translate3d(0,-20vh,0); }
@@ -134,7 +130,6 @@ body {
   z-index: 120;
 }
 .video-modal.show { opacity: 1; pointer-events: auto; }
-
 .video-wrap {
   width: min(800px, 92vw);
   aspect-ratio: 16/9;
@@ -168,6 +163,7 @@ body {
   box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
 }
 
+/* 작은 화면 폰트 더 줄이기(선택) */
 @media (max-width: 768px) {
-  .pixel-text { font-size: 16px; top: 64px; }
+  .pixel-text { font-size: clamp(13px, 3.6vw, 18px); margin-bottom: 16px; }
 }
