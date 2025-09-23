@@ -15,34 +15,57 @@
       </button>
     </header>
 
-    <!-- 상단 픽셀 텍스트 (여기에 타이핑됨) -->
+    <!-- 상단 텍스트(타자 애니메이션 대상) -->
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
-    <!-- 메인 히어로: 그라데이션 + 중앙 이미지 -->
+    <!-- 메인 히어로: 그라데이션 + 중앙 이미지 + 클릭 핫스팟(나현) -->
     <main class="hero" role="main">
-      <img src="pp1.png" alt="Super PPM" class="hero-image" />
+      <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
+
+      <!-- 🔵 나현(핑크 캐릭터) 핫스팟
+           - 위치는 % 단위. 필요하면 1~2%씩 좌표 수정해 맞추면 돼요 -->
+      <button
+        class="hotspot"
+        id="hs-nahyun"
+        style="left: 18%; top: 64%;"
+        aria-label="나현 캐릭터 열기">
+      </button>
     </main>
 
-    <!-- 타자기 애니메이션 -->
-    <script>
-      const logoBtn = document.getElementById("logoBtn");
-      const introText = document.getElementById("introText");
+    <!-- 🎬 플로팅 영상 모달 -->
+    <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="캐릭터 영상">
+      <div class="video-wrap">
+        <video id="charVideo" playsinline controls muted></video>
+        <button class="close-btn" id="closeModal" aria-label="영상 닫기">✕</button>
+      </div>
+    </div>
 
-      const message = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
+    <!-- 스크립트 -->
+    <script>
+      const introText  = document.getElementById("introText");
+      const logoBtn    = document.getElementById("logoBtn");
+      const hsNahyun   = document.getElementById("hs-nahyun");
+
+      // 기본 소개 문구
+      const defaultMessage = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
 함께라면 어떤 보스전도 두렵지 않습니다!`;
 
-      let timer;
+      // 나현 캐릭터 데이터
+      const NAHYUN = {
+        message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 무드메이커",
+        video: "videos/nahyun.mp4" // 나중에 파일 올리면 자동 재생됨
+      };
 
+      // 모달 핸들
+      const videoModal = document.getElementById("videoModal");
+      const closeModal = document.getElementById("closeModal");
+      const charVideo  = document.getElementById("charVideo");
+
+      let timer;
       function typeWriter(text, el, speed = 40) {
-        // '감속'이 켜진 사용자에겐 즉시 표시
-        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         clearInterval(timer);
         el.textContent = "";
-        if (prefersReduced) {
-          el.textContent = text;
-          return;
-        }
         let i = 0;
         timer = setInterval(() => {
           el.textContent += text[i] ?? "";
@@ -51,14 +74,43 @@
         }, speed);
       }
 
-      // 첫 진입 자동 재생
+      // 모달 열고 닫기
+      function openVideo(src) {
+        if (!src) return;
+        charVideo.src = src;
+        charVideo.currentTime = 0;
+        videoModal.classList.add("show");
+        videoModal.setAttribute("aria-hidden", "false");
+        // 자동재생 시도(브라우저 정책상 muted일 때 대부분 허용)
+        charVideo.play().catch(() => {});
+      }
+      function closeVideo() {
+        charVideo.pause();
+        charVideo.currentTime = 0;
+        videoModal.classList.remove("show");
+        videoModal.setAttribute("aria-hidden", "true");
+        charVideo.removeAttribute("src");
+        charVideo.load();
+      }
+
+      closeModal.addEventListener("click", closeVideo);
+      videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
+
+      // 첫 진입 기본 문구 애니메이션
       window.addEventListener("DOMContentLoaded", () => {
-        typeWriter(message, introText, 40);
+        typeWriter(defaultMessage, introText, 40);
       });
 
-      // 로고 클릭 시 다시 재생
+      // 로고 클릭 → 기본 문구 다시 시작
       logoBtn.addEventListener("click", () => {
-        typeWriter(message, introText, 40);
+        typeWriter(defaultMessage, introText, 40);
+      });
+
+      // 나현 클릭 → 문구 교체 + (있다면) 영상 모달
+      hsNahyun.addEventListener("click", () => {
+        typeWriter(NAHYUN.message, introText, 35);
+        openVideo(NAHYUN.video);
       });
     </script>
   </body>
