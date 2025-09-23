@@ -45,21 +45,19 @@ body {
 }
 .logo-btn:active { transform: translate(1px,1px); }
 
-/* 4) 상단 텍스트 (외곽선 제거 → 순수 흰색만) */
+/* 4) 상단 텍스트(흰색만) */
 .pixel-text {
   position: fixed;
-  top: 68px; /* 상단바 아래 */
-  left: 0; right: 0;
+  top: 68px; left: 0; right: 0;
   z-index: 90;
   padding: 0 16px;
   text-align: center;
-  font-family: 'Galmuri11', monospace;
   font-weight: 400;
   font-size: 20px;
   line-height: 1.6;
-  color: #ffffff;     /* 흰색 글자 */
-  white-space: pre-line; /* 줄바꿈 유지 */
-  pointer-events: none;  /* 클릭 방해 X */
+  color: #ffffff;
+  white-space: pre-line;
+  pointer-events: none;
 }
 
 /* 5) 히어로(배경 + 이미지) */
@@ -68,17 +66,62 @@ body {
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(#269CFE, #BDF4FF);
   position: relative;
-  padding-top: 120px; /* 상단 텍스트가 겹치지 않도록 여백 */
+  padding-top: 120px; /* 상단 텍스트가 겹치지 않도록 */
 }
 .hero-image {
   max-width: 90%;
-  max-height: 65vh;   /* ↑ 여백 더 원하면 60~70vh로 조절 */
-  height: auto;
-  display: block;
+  max-height: 65vh;
+  height: auto; display: block;
 }
 
-/* 6) 반응형 */
+/* 6) 캐릭터 핫스팟 (클릭 영역) */
+.hotspot {
+  position: absolute;
+  width: clamp(70px, 9vw, 120px);
+  height: clamp(70px, 9vw, 120px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  /* 개발 중 위치 보기 원하면 아래 두 줄 잠깐 주석 해제 */
+  /* outline: 2px dashed rgba(255,255,255,.7);
+     background: rgba(255,255,255,.08); */
+}
+.hotspot:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* 7) 비디오 모달 */
+.video-modal {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,.6);
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  z-index: 120;
+}
+.video-modal.show { opacity: 1; pointer-events: auto; }
+.video-wrap {
+  width: min(800px, 92vw);
+  aspect-ratio: 16/9;
+  position: relative;
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+#charVideo { width: 100%; height: 100%; display: block; }
+.close-btn {
+  position: absolute; top: -12px; right: -12px;
+  background: #000; color: #fff; border: 0; cursor: pointer;
+  padding: 6px 10px;
+  box-shadow:
+    0 0 0 2px #fff inset,
+    0 0 0 4px #000 inset,
+    2px 2px 0 0 #000;
+}
+
+/* 8) 반응형 */
 @media (max-width: 768px) {
   .pixel-text { font-size: 16px; top: 64px; }
-  .hero-image { max-width: 94%; max-height: 58vh; }
+  .hero-image  { max-width: 94%; max-height: 58vh; }
 }
