@@ -13,7 +13,8 @@ html, body {
 }
 
 .hero-image {
-  max-width: 100%;
+  max-width: 90%;      /* 가로는 최대 90% */
+  max-height: 70vh;    /* 세로는 화면의 70%까지만 */
   height: auto;
   display: block;
 }
