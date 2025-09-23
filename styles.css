@@ -75,13 +75,47 @@ body {
   display: block;
 }
 
+/* 🌟 흐르는 배경 패턴 (전체 화면 뒤) */
+.flow-bg{
+  position: fixed;
+  inset: 0;
+  z-index: 0;          /* 최뒤 */
+  pointer-events: none;
+  overflow: hidden;
+}
+.sprite{
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.28;             /* 은은하게 */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
+  transform: translateY(0) rotate(var(--rot,0deg));
+  animation-name: floatUp;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.sprite.star  { opacity: 0.30; }
+.sprite.box   { opacity: 0.26; }
+.sprite.heart { opacity: 0.32; }
+
+/* 위로 흐르며 좌우로 살짝 흔들림 */
+@keyframes floatUp{
+  0%   { transform: translateY(0)      rotate(var(--rot,0deg)); }
+  25%  { transform: translateY(-35vh)  translateX(10px) rotate(calc(var(--rot,0deg) + 6deg)); }
+  50%  { transform: translateY(-70vh)  translateX(0)    rotate(calc(var(--rot,0deg) + 10deg)); }
+  75%  { transform: translateY(-105vh) translateX(-10px)rotate(calc(var(--rot,0deg) + 6deg)); }
+  100% { transform: translateY(-140vh) rotate(var(--rot,0deg)); }
+}
+
 /* 핫스팟 (투명) */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
   cursor: pointer;
-  z-index: 2;
+  z-index: 2;           /* 콘텐츠 위 */
   background: transparent;
   outline: none;
 }
@@ -110,13 +144,13 @@ body {
 .video-wrap {
   width: min(800px, 92vw);
   aspect-ratio: 16/9;
-  position: relative; /* 캡션 위치 기준 */
+  position: relative;
   background: #000;
   box-shadow: 0 10px 30px rgba(0,0,0,.4);
 }
 #charVideo { width: 100%; height: 100%; display: block; }
 
-/* ▶ 영상 위 캡션 (같은 레이어) */
+/* ▶ 영상 위 캡션 */
 .video-caption {
   position: absolute;
   left: 50%; transform: translateX(-50%);
