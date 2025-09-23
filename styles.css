@@ -72,7 +72,7 @@ body {
   display: block;
 }
 
-/* 공통 핫스팟 (빨간 박스 ON: 위치 맞출 때 유용) */
+/* 공통 핫스팟 (빨간 박스 ON) */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -110,12 +110,21 @@ body {
   border-radius: 0;
 }
 
-/* 김수지(피치 공주) — 시작 좌표(거의 맞게 잡음). 미세조정은 0.5~1% 단위로 */
+/* 김수지(피치 공주) */
 .suji-area {
-  left: 49%;   /* 더 오른쪽이면 ↑, 왼쪽이면 ↓ */
-  top: 64%;      /* 더 아래면 ↑, 위면 ↓ */
-  width: 10%;    /* 폭 */
-  height: 55%;   /* 높이 (드레스까지) */
+  left: 49%;
+  top: 64%;
+  width: 10%;
+  height: 55%;
+  border-radius: 0;
+}
+
+/* 정록정(요시) — 시작 좌표 */
+.rokjeong-area {
+  left: 61%;
+  top: 79%;
+  width: 12%;
+  height: 37%;
   border-radius: 0;
 }
 
