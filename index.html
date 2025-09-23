@@ -14,7 +14,7 @@
       </button>
     </header>
 
-    <!-- 초기 문구: 처음만 노출 후 자동 숨김 -->
+    <!-- 초기 문구: 계속 노출 -->
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
     <main class="hero" role="main">
@@ -69,7 +69,7 @@
 `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
 함께라면 어떤 보스전도 두렵지 않습니다!
-각 캐릭터를 클릭하여 멤버별 특성을 확인해보세요`;
+각 캐릭터를 클릭하여 멤버별 특성을 확인해보세요.`;
 
       const NAHYUN   = { message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 \n무드메이커 나현", video: "videos/nahyun.mp4" };
       const CHULHO   = { message: "힘과 추진력으로 무거운 프로젝트를 과감히 밀어붙이는 \n파워 플레이어 김철호", video: "videos/chulho.mp4" };
@@ -98,9 +98,8 @@
         });
       }
 
-      // 모달 열기/닫기
+      // 모달 열기/닫기 (상단 문구는 이제 숨기지 않음)
       async function openVideo(src, message) {
-        introText.classList.add("hidden");
         videoCap.textContent = "";
         await Promise.resolve();
         typeWriter(message, videoCap, 35);
@@ -124,16 +123,18 @@
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
 
-      // 초기: 기본 문구 출력 후 자동 숨김
+      // 초기: 기본 문구 출력 (자동 숨김 제거)
       window.addEventListener("DOMContentLoaded", async () => {
+        introText.classList.remove("hidden"); // 혹시 숨겨져 있으면 보이게
         await typeWriter(defaultMessage, introText, 40);
-        setTimeout(() => introText.classList.add("hidden"), 3000);
+        // 더 이상 자동으로 숨기지 않음
       });
-      // 로고 클릭 → 초기 문구 다시 보기
+
+      // 로고 클릭 → 초기 문구 타이핑만 다시
       logoBtn.addEventListener("click", async () => {
         introText.classList.remove("hidden");
         await typeWriter(defaultMessage, introText, 40);
-        setTimeout(() => introText.classList.add("hidden"), 3000);
+        // 숨기지 않고 그대로 유지
       });
 
       // 캐릭터 클릭
@@ -172,8 +173,8 @@
           const size = 28 + Math.random() * 28; // 28~56px
           s.style.setProperty('--size', size + 'px');
           s.style.backgroundImage = `url('${imgFor(t)}')`;
-          s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';   // ✅ 0~1초만 지연
-          s.style.animationDuration = (15 + Math.random() * 10).toFixed(2) + 's'; // 10~20s로 낙하
+          s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';   // 0~1초만 지연
+          s.style.animationDuration = (15 + Math.random() * 10).toFixed(2) + 's'; // 15~25s
 
           flowBg.appendChild(s);
         }
