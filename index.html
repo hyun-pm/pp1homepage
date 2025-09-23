@@ -18,7 +18,7 @@
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
     <main class="hero" role="main">
-      <!-- ✅ 흐르는 배경 패턴: .hero 전체를 덮음 (pp1 이미지 ‘뒤’) -->
+      <!-- ✅ 배경 아이템(히어로 전체, pp1 뒤) -->
       <div id="flowBg" class="flow-bg" aria-hidden="true"></div>
 
       <div class="hero-figure">
@@ -146,17 +146,16 @@
       hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
       hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
 
-      /* 🌟 흐르는 배경 시드 (.hero 전체 기준) */
+      /* 🌟 흐르는 배경 시드 (.hero 전체 기준) — 위→아래 직하강, 시작 지연 0~1s */
       const flowBg = document.getElementById('flowBg');
 
       function imgFor(type){
-        // 이미지가 같은 루트에 있으므로 상대경로 그대로 사용
         if (type === 'heart') return './heart.png';
         if (type === 'star')  return './star.png';
         return './box.png';
       }
 
-      function seedFlow(total = 36) {
+      function seedFlow(total = 40) {
         if (!flowBg) return;
         flowBg.innerHTML = '';
         const types = ['heart','star','box'];
@@ -165,19 +164,16 @@
           const s = document.createElement('span');
           s.className = `sprite ${t}`;
 
-          // 화면 밖 위쪽에서 시작해 ↘로 떨어짐
-          s.style.left = (-10 + Math.random() * 120).toFixed(2) + 'vw';  // -10~110vw
-          s.style.top  = (-30 + Math.random() * 10).toFixed(2) + 'vh';   // -30~-20vh
+          // 랜덤 X, 화면 위쪽(-30~-10vh)에서 시작
+          s.style.left = (Math.random() * 100).toFixed(2) + 'vw';
+          s.style.top  = (-30 + Math.random() * 20).toFixed(2) + 'vh';
 
+          // 크기/속도/지연
           const size = 28 + Math.random() * 28; // 28~56px
           s.style.setProperty('--size', size + 'px');
           s.style.backgroundImage = `url('${imgFor(t)}')`;
-
-          // 각자 다른 속도/지연
-          s.style.animationDelay    = (Math.random() * 6).toFixed(2) + 's';
-          s.style.animationDuration = (12 + Math.random() * 12).toFixed(2) + 's';
-          // 좌우 부드러운 드리프트 폭
-          s.style.setProperty('--drift', (5 + Math.random()*15).toFixed(1) + 'vw');
+          s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';   // ✅ 0~1초만 지연
+          s.style.animationDuration = (10 + Math.random() * 10).toFixed(2) + 's'; // 10~20s로 낙하
 
           flowBg.appendChild(s);
         }
