@@ -119,12 +119,21 @@ body {
   border-radius: 0;
 }
 
-/* 정록정(요시) — 시작 좌표 */
+/* 정록정(요시) */
 .rokjeong-area {
   left: 60%;
   top: 79%;
   width: 9%;
   height: 37%;
+  border-radius: 0;
+}
+
+/* 한구희(와루이지) — 시작 좌표 */
+.guhee-area {
+  left: 72%;
+  top: 74%;
+  width: 14%;
+  height: 48%;
   border-radius: 0;
 }
 
