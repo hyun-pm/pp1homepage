@@ -30,9 +30,11 @@ body {
 .logo-btn {
   font-family: 'Galmuri11', monospace;
   font-weight: 700;
-  background: #000; color: #fff; border: 0; cursor: pointer;
+  background: #000; color: #fff; border: 0;
   padding: 8px 12px;
   box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+  /* ✅ 커서 이미지 적용 */
+  cursor: url('./cursor.png') 16 16, pointer;
 }
 .logo-btn:active { transform: translate(1px,1px); }
 
@@ -52,22 +54,16 @@ body {
   margin: 0 auto 20px;
   text-align: center;
 
-  /* ✅ 컨테이너 폭에 맞춰 글자 크기만 반응형으로 축소 */
-  /*    (값을 낮춰 첫 줄도 항상 한 줄 유지) */
   font-size: clamp(10px, 1.15vw, 18px);
   line-height: 1.6;
 
-  /* ✅ \n 위치에서만 줄바꿈, 한 줄 내부에서는 자동 줄바꿈 금지 */
-  white-space: pre;      /* pre-wrap → pre */
+  white-space: pre;
   word-break: keep-all;
-
-  /* 혹시라도 극단적 해상도에서 넘침 방지용(필요시 주석 처리 가능) */
   overflow: hidden;
 
   z-index: 2;
 }
 
-/* 작은 화면에서 더 빨리 줄여서 겹침 방지 */
 @media (max-width: 480px) {
   .pixel-text { font-size: clamp(10px, 3.4vw, 16px); }
 }
@@ -117,10 +113,11 @@ body {
   position: absolute;
   transform: translate(-50%, -50%);
   border: 0;
-  cursor: pointer;
   z-index: 3;
   background: transparent;
   outline: none;
+  /* ✅ 커서 이미지 적용 */
+  cursor: url('./cursor.png') 16 16, pointer;
 }
 .hotspot:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
@@ -176,4 +173,6 @@ body {
   background: #000; color: #fff; border: 0; cursor: pointer;
   padding: 6px 10px;
   box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+  /* ✅ 커서 이미지 적용 */
+  cursor: url('./cursor.png') 16 16, pointer;
 }
