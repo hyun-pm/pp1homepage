@@ -54,8 +54,7 @@ body {
 /* 히어로 (그라데이션 배경) */
 .hero {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  display: grid; place-items: center;
   background: linear-gradient(#269CFE, #BDF4FF);
   position: relative;   /* ✅ flow-bg의 기준 컨테이너 */
   padding-top: 120px;
@@ -65,7 +64,7 @@ body {
 .flow-bg{
   position: absolute;
   inset: 0;
-  z-index: 0;          /* pp1 이미지(.hero-figure)보다 뒤 */
+  z-index: 0;          /* pp1 이미지보다 뒤 */
   pointer-events: none;
   overflow: hidden;
 }
@@ -84,7 +83,7 @@ body {
   display: block;
 }
 
-/* 떨어지는 스프라이트 */
+/* 떨어지는 스프라이트 — 위→아래 직하강 */
 .sprite{
   position: absolute;
   width: var(--size);
@@ -92,16 +91,15 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 1;  /* 배경이므로 100% */
-  transform: translate3d(0,0,0);
-  animation: fallDiag linear infinite;
+  transform: translate3d(0,-20vh,0);
+  animation: fallDown linear infinite;
   will-change: transform;
 }
 
-/* ↘ 대각선 낙하 + 좌우 드리프트 */
-@keyframes fallDiag{
-  0%   { transform: translate3d(0,   -20vh, 0); }
-  50%  { transform: translate3d(calc(var(--drift) / 2), 50vh, 0); }
-  100% { transform: translate3d(var(--drift), 120vh, 0); }
+/* 직하강 */
+@keyframes fallDown{
+  0%   { transform: translate3d(0,-20vh,0); }
+  100% { transform: translate3d(0,120vh,0); }
 }
 
 /* 핫스팟 (투명) */
