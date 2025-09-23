@@ -20,8 +20,12 @@
       <!-- 이미지 기준으로 정확한 좌표 계산 -->
       <div class="hero-figure">
         <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
+
         <!-- 🔴 나현 클릭 영역 (빨간 박스 표시됨) -->
         <button class="hotspot nahyun-area" id="hs-nahyun" aria-label="나현 캐릭터 열기"></button>
+
+        <!-- 🔴 철호(동키콩) 클릭 영역 (빨간 박스 표시됨) -->
+        <button class="hotspot chulho-area" id="hs-chulho" aria-label="김철호 캐릭터 열기"></button>
       </div>
     </main>
 
@@ -36,16 +40,23 @@
       const introText  = document.getElementById("introText");
       const logoBtn    = document.getElementById("logoBtn");
       const hsNahyun   = document.getElementById("hs-nahyun");
+      const hsChulho   = document.getElementById("hs-chulho");
 
       const defaultMessage = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
 함께라면 어떤 보스전도 두렵지 않습니다!`;
 
+      // 캐릭터 데이터
       const NAHYUN = {
         message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 무드메이커 나현",
         video: "videos/nahyun.mp4"
       };
+      const CHULHO = {
+        message: "힘과 추진력으로 무거운 프로젝트를 과감히 밀어붙이는 파워 플레이어 김철호",
+        video: "videos/chulho.mp4"
+      };
 
+      // 모달
       const videoModal = document.getElementById("videoModal");
       const closeModal = document.getElementById("closeModal");
       const charVideo  = document.getElementById("charVideo");
@@ -82,17 +93,25 @@
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
 
+      // 첫 진입 기본 문구
       window.addEventListener("DOMContentLoaded", () => {
         typeWriter(defaultMessage, introText, 40);
       });
+
+      // 로고 클릭 → 기본 문구 다시 시작
       logoBtn.addEventListener("click", () => {
         typeWriter(defaultMessage, introText, 40);
       });
+
+      // 각 캐릭터 클릭
       hsNahyun.addEventListener("click", () => {
         typeWriter(NAHYUN.message, introText, 35);
         openVideo(NAHYUN.video);
       });
+      hsChulho.addEventListener("click", () => {
+        typeWriter(CHULHO.message, introText, 35);
+        openVideo(CHULHO.video);
+      });
     </script>
   </body>
 </html>
-
