@@ -74,19 +74,25 @@ body {
   height: auto; display: block;
 }
 
-/* 6) 캐릭터 핫스팟 (클릭 영역) */
+/* 6) 캐릭터 클릭 영역(나현: 직사각형 전체) */
 .hotspot {
   position: absolute;
-  width: clamp(70px, 9vw, 120px);
-  height: clamp(70px, 9vw, 120px);
   transform: translate(-50%, -50%);
-  border-radius: 50%;
   background: transparent;
   border: 0;
   cursor: pointer;
-  /* 개발 중 위치 보기 원하면 아래 두 줄 잠깐 주석 해제 */
-  /* outline: 2px dashed rgba(255,255,255,.7);
-     background: rgba(255,255,255,.08); */
+  z-index: 20;
+  /* 개발 중 위치 보기(잠깐 켜기)
+  outline: 2px dashed rgba(255,255,255,.7);
+  background: rgba(255,255,255,.08);
+  */
+}
+.nahyun-area {
+  left: 20%;
+  top: 66%;
+  width: 14vw;   /* 필요 시 12~18vw */
+  height: 34vh;  /* 필요 시 28~38vh */
+  border-radius: 0;
 }
 .hotspot:focus-visible {
   outline: 3px solid #fff;
@@ -124,4 +130,6 @@ body {
 @media (max-width: 768px) {
   .pixel-text { font-size: 16px; top: 64px; }
   .hero-image  { max-width: 94%; max-height: 58vh; }
+  .nahyun-area { width: 30vw; height: 32vh; left: 22%; top: 66%; }
 }
+
