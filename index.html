@@ -9,13 +9,13 @@
   </head>
   <body>
     <header class="topbar">
-      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행">
+      <button class="logo-btn" id="logoBtn" aria-label="SUPER PPM 소개 애니메이션 다시 실행" type="button">
         SUPERPPM
       </button>
     </header>
 
     <main class="hero" role="main">
-      <!-- 반응형 문구 (항상 노출) -->
+      <!-- 반응형 고정 문구 -->
       <div class="pixel-text" id="introText" aria-live="polite"></div>
 
       <!-- 배경 아이템(히어로 전체, pp1 뒤) -->
@@ -25,37 +25,44 @@
         <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
 
         <!-- 캐릭터 핫스팟들 (투명) -->
-        <button class="hotspot nahyun-area"   id="hs-nahyun"   aria-label="나현 캐릭터 열기"></button>
-        <button class="hotspot chulho-area"   id="hs-chulho"   aria-label="김철호 캐릭터 열기"></button>
-        <button class="hotspot jihye-area"    id="hs-jihye"    aria-label="설지혜 캐릭터 열기"></button>
-        <button class="hotspot suji-area"     id="hs-suji"     aria-label="김수지 캐릭터 열기"></button>
-        <button class="hotspot rokjeong-area" id="hs-rokjeong" aria-label="정록정 캐릭터 열기"></button>
-        <button class="hotspot guhee-area"    id="hs-guhee"    aria-label="한구희 캐릭터 열기"></button>
-        <button class="hotspot yonsoo-area"   id="hs-yonsoo"   aria-label="박연수 캐릭터 열기"></button>
-        <button class="hotspot kabmin-area"   id="hs-kabmin"   aria-label="김갑민 캐릭터 열기"></button>
+        <button class="hotspot nahyun-area"   id="hs-nahyun"   aria-label="나현 캐릭터 열기"   type="button"></button>
+        <button class="hotspot chulho-area"   id="hs-chulho"   aria-label="김철호 캐릭터 열기" type="button"></button>
+        <button class="hotspot jihye-area"    id="hs-jihye"    aria-label="설지혜 캐릭터 열기" type="button"></button>
+        <button class="hotspot suji-area"     id="hs-suji"     aria-label="김수지 캐릭터 열기" type="button"></button>
+        <button class="hotspot rokjeong-area" id="hs-rokjeong" aria-label="정록정 캐릭터 열기" type="button"></button>
+        <button class="hotspot guhee-area"    id="hs-guhee"    aria-label="한구희 캐릭터 열기" type="button"></button>
+        <button class="hotspot yonsoo-area"   id="hs-yonsoo"   aria-label="박연수 캐릭터 열기" type="button"></button>
+        <button class="hotspot kabmin-area"   id="hs-kabmin"   aria-label="김갑민 캐릭터 열기" type="button"></button>
       </div>
     </main>
 
     <!-- 영상 모달 -->
     <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="캐릭터 영상">
       <div class="video-wrap">
-        <!-- ✅ 재생 호환성 보강 -->
-        <video id="charVideo" playsinline webkit-playsinline muted autoplay preload="metadata" controls></video>
+        <!-- 재생 호환성 보강 -->
+        <video id="charVideo"
+               playsinline webkit-playsinline
+               muted autoplay
+               preload="metadata"
+               controls
+               poster=""
+               style="background:#000"></video>
         <div class="video-caption" id="videoCaption" aria-live="polite"></div>
-        <button class="close-btn" id="closeModal" aria-label="영상 닫기">✕</button>
+        <button class="close-btn" id="closeModal" aria-label="영상 닫기" type="button">✕</button>
       </div>
     </div>
 
     <script>
-      // 엘리먼트
+      // ===== 엘리먼트
       const introText   = document.getElementById("introText");
       const logoBtn     = document.getElementById("logoBtn");
       const videoModal  = document.getElementById("videoModal");
       const closeModal  = document.getElementById("closeModal");
       const charVideo   = document.getElementById("charVideo");
       const videoCap    = document.getElementById("videoCaption");
+      const flowBg      = document.getElementById('flowBg');
 
-      // 핫스팟
+      // ===== 핫스팟
       const hsNahyun   = document.getElementById("hs-nahyun");
       const hsChulho   = document.getElementById("hs-chulho");
       const hsJihye    = document.getElementById("hs-jihye");
@@ -65,23 +72,23 @@
       const hsYonsoo   = document.getElementById("hs-yonsoo");
       const hsKabmin   = document.getElementById("hs-kabmin");
 
-      // 문구
+      // ===== 문구
       const defaultMessage =
 `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
 함께라면 어떤 보스전도 두렵지 않습니다!
 각 캐릭터를 클릭하여 멤버별 특성을 확인해보세요.`;
 
-      const NAHYUN   = { message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 \n무드메이커 나현", video: "videos/nahyun.mp4" };
-      const CHULHO   = { message: "힘과 추진력으로 무거운 프로젝트를 과감히 밀어붙이는 \n파워 플레이어 김철호", video: "videos/chulho.mp4" };
-      const JIHYE    = { message: "빠른 자료 정리와 꼼꼼한 지원으로 모험의 기초 체력을 책임지는 \n든든한 서포터 설지혜", video: "videos/jihye.mp4" };
-      const SUJI     = { message: "팀의 무드를 밝게 하고 위기에서 점프해 길을 열어주는 \n리더 김수지", video: "videos/suji.mp4" };
-      const ROKJEONG = { message: "아이디어를 빠르게 삼키고, 소화해서 팀 맞춤형으로 다시 내놓는 \n든든한 동료 정록정", video: "videos/rokjeong.mp4" };
-      const GUHEE    = { message: "변칙 플레이와 반전 아이디어로 예상을 깨고 새로운 길을 만들어내는 \n전략가 한구희", video: "videos/guhee.mp4" };
-      const YONSOO   = { message: "에너지와 열정으로 분위기를 불태우고, 새로운 도전을 두려워하지 않는 \n추진력 담당 박연수", video: "videos/yonsoo.mp4" };
-      const KABMIN   = { message: "pp1의 정신적 지주 갑민님", video: "videos/kabmin.mp4" };
+      const NAHYUN   = { message: "밝고 친화적인 에너지로 팀을 따뜻하게 묶어주는 \n무드메이커 나현", video: "./videos/nahyun.mp4" };
+      const CHULHO   = { message: "힘과 추진력으로 무거운 프로젝트를 과감히 밀어붙이는 \n파워 플레이어 김철호", video: "./videos/chulho.mp4" };
+      const JIHYE    = { message: "빠른 자료 정리와 꼼꼼한 지원으로 모험의 기초 체력을 책임지는 \n든든한 서포터 설지혜", video: "./videos/jihye.mp4" };
+      const SUJI     = { message: "팀의 무드를 밝게 하고 위기에서 점프해 길을 열어주는 \n리더 김수지", video: "./videos/suji.mp4" };
+      const ROKJEONG = { message: "아이디어를 빠르게 삼키고, 소화해서 팀 맞춤형으로 다시 내놓는 \n든든한 동료 정록정", video: "./videos/rokjeong.mp4" };
+      const GUHEE    = { message: "변칙 플레이와 반전 아이디어로 예상을 깨고 새로운 길을 만들어내는 \n전략가 한구희", video: "./videos/guhee.mp4" };
+      const YONSOO   = { message: "에너지와 열정으로 분위기를 불태우고, 새로운 도전을 두려워하지 않는 \n추진력 담당 박연수", video: "./videos/yonsoo.mp4" };
+      const KABMIN   = { message: "pp1의 정신적 지주 갑민님", video: "./videos/kabmin.mp4" };
 
-      // 타자 애니메이션
+      // ===== 타자 애니메이션
       let typerTimer;
       function typeWriter(text, el, speed = 40) {
         clearInterval(typerTimer);
@@ -99,33 +106,35 @@
         });
       }
 
-      // 모달 열기/닫기 (상단 문구는 유지)
+      // ===== 모달 열기/닫기
       async function openVideo(src, message) {
-        // 캡션 타자
+        console.log('[openVideo] try open:', src);
+        // 캡션
         videoCap.textContent = "";
         await Promise.resolve();
         typeWriter(message, videoCap, 35);
 
-        // ✅ 재생 호환성: 필수 속성 먼저 세팅
-        charVideo.muted = true;                  // iOS 자동재생 조건
+        // 비디오 속성 선세팅
+        charVideo.muted = true;
         charVideo.autoplay = true;
         charVideo.playsInline = true;
         charVideo.setAttribute('webkit-playsinline', '');
 
-        // 새 소스 지정 후 로드
+        // 소스 지정 & 로드
         charVideo.src = src;
         charVideo.load();
 
-        // 모달 표시 후 다음 틱에 재생 시도(레이아웃 반영 뒤)
+        // ✅ 모달을 즉시 띄워 시각적 피드백 보장
         videoModal.classList.add("show");
         videoModal.setAttribute("aria-hidden", "false");
 
+        // 재생 시도 (UI 반영 뒤)
         setTimeout(() => {
           const p = charVideo.play();
           if (p && typeof p.catch === 'function') {
             p.catch(err => {
               console.warn('[video play blocked]', err);
-              // 사용자가 직접 탭해서 재생할 수 있게 컨트롤은 이미 노출됨
+              // 재생이 막혀도(모바일 정책 등) 모달/컨트롤은 떠 있으니 사용자가 눌러서 재생 가능
             });
           }
         }, 0);
@@ -136,19 +145,21 @@
         charVideo.currentTime = 0;
         videoModal.classList.remove("show");
         videoModal.setAttribute("aria-hidden", "true");
-        // 소스 제거 후 로드로 멈춤 보장
         charVideo.removeAttribute("src");
         charVideo.load();
         videoCap.textContent = "";
       }
 
+      // 닫기 핸들
       closeModal.addEventListener("click", closeVideo);
       videoModal.addEventListener("click", (e) => { if (e.target === videoModal) closeVideo(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeVideo(); });
 
-      // 초기: 문구 타이핑 (자동 숨김 없음)
+      // ===== 초기: 문구 타이핑
       window.addEventListener("DOMContentLoaded", async () => {
         await typeWriter(defaultMessage, introText, 40);
+        // 디버그: 핫스팟이 실제로 바인딩 됐는지 찍기
+        console.log('[ready] hotspots bound');
       });
 
       // 로고 클릭 → 문구 타이핑만 다시
@@ -156,8 +167,24 @@
         await typeWriter(defaultMessage, introText, 40);
       });
 
-      // 배경 아이템 낙하
-      const flowBg = document.getElementById('flowBg');
+      // ===== 캐릭터 클릭
+      const bind = (el, data, name) => {
+        if (!el) { console.warn('[bind fail]', name); return; }
+        el.addEventListener("click", () => {
+          console.log('[hotspot click]', name);
+          openVideo(data.video, data.message);
+        });
+      };
+      bind(hsNahyun,   NAHYUN,   'NAHYUN');
+      bind(hsChulho,   CHULHO,   'CHULHO');
+      bind(hsJihye,    JIHYE,    'JIHYE');
+      bind(hsSuji,     SUJI,     'SUJI');
+      bind(hsRokjeong, ROKJEONG, 'ROKJEONG');
+      bind(hsGuhee,    GUHEE,    'GUHEE');
+      bind(hsYonsoo,   YONSOO,   'YONSOO');
+      bind(hsKabmin,   KABMIN,   'KABMIN');
+
+      // ===== 배경 아이템 낙하
       function imgFor(type){
         if (type === 'heart') return './heart.png';
         if (type === 'star')  return './star.png';
@@ -171,31 +198,24 @@
           const t = types[i % types.length];
           const s = document.createElement('span');
           s.className = `sprite ${t}`;
-
-          // 랜덤 X, 화면 위쪽(-30~-10vh)에서 시작
           s.style.left = (Math.random() * 100).toFixed(2) + 'vw';
           s.style.top  = (-30 + Math.random() * 20).toFixed(2) + 'vh';
-
-          // 크기/속도/지연
-          const size = 28 + Math.random() * 28; // 28~56px
+          const size = 28 + Math.random() * 28;
           s.style.setProperty('--size', size + 'px');
           s.style.backgroundImage = `url('${imgFor(t)}')`;
           s.style.animationDelay    = (Math.random() * 1).toFixed(2) + 's';
-          s.style.animationDuration = (15 + Math.random() * 10).toFixed(2) + 's'; // 15~25s
-
+          s.style.animationDuration = (15 + Math.random() * 10).toFixed(2) + 's';
           flowBg.appendChild(s);
         }
       }
       seedFlow(30);
-
-      // 리사이즈 시 재시드
       let flowTimer;
       window.addEventListener('resize', () => {
         clearTimeout(flowTimer);
         flowTimer = setTimeout(() => seedFlow(40), 200);
       });
 
-      // (선택) iOS에서 터치 시 재생 보조
+      // iOS 터치 보조
       charVideo.addEventListener('touchstart', () => {
         if (charVideo.paused) {
           charVideo.play().catch(()=>{});
