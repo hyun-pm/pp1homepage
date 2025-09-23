@@ -18,16 +18,14 @@
     <!-- 상단 텍스트(타자 애니메이션 대상) -->
     <div class="pixel-text" id="introText" aria-live="polite"></div>
 
-    <!-- 메인 히어로: 그라데이션 + 중앙 이미지 + 클릭 핫스팟(나현) -->
+    <!-- 메인 히어로: 그라데이션 + 중앙 이미지 + 클릭 핫스팟(나현: 전체 영역) -->
     <main class="hero" role="main">
       <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
 
-      <!-- 🔵 나현(핑크 캐릭터) 핫스팟
-           - 위치는 % 단위. 필요하면 1~2%씩 좌표 수정해 맞추면 돼요 -->
+      <!-- 🔵 나현 캐릭터 전체 클릭 영역 -->
       <button
-        class="hotspot"
+        class="hotspot nahyun-area"
         id="hs-nahyun"
-        style="left: 18%; top: 64%;"
         aria-label="나현 캐릭터 열기">
       </button>
     </main>
@@ -81,7 +79,6 @@
         charVideo.currentTime = 0;
         videoModal.classList.add("show");
         videoModal.setAttribute("aria-hidden", "false");
-        // 자동재생 시도(브라우저 정책상 muted일 때 대부분 허용)
         charVideo.play().catch(() => {});
       }
       function closeVideo() {
