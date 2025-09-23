@@ -132,14 +132,14 @@
       window.addEventListener("DOMContentLoaded", async () => {
         await typeWriter(defaultMessage, introText, 40);
         // 다 나오면 부드럽게 숨김
-        setTimeout(() => introText.classList.add("hidden"), 600);
+        setTimeout(() => introText.classList.add("hidden"), 3000);
       });
 
       // 로고 클릭 → 초기 문구 다시 보기
       logoBtn.addEventListener("click", async () => {
         introText.classList.remove("hidden");
         await typeWriter(defaultMessage, introText, 40);
-        setTimeout(() => introText.classList.add("hidden"), 600);
+        setTimeout(() => introText.classList.add("hidden"), 3000);
       });
 
       // 캐릭터 클릭 → 영상 + 모달 캡션(같은 레이어)
