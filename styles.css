@@ -28,6 +28,7 @@ body {
   z-index: 100;
 }
 .logo-btn {
+  font-family: 'Galmuri11', monospace; /* ✅ 갈무리 폰트 적용 */
   font-weight: 700;
   background: #000; color: #fff; border: 0; cursor: pointer;
   padding: 8px 12px;
