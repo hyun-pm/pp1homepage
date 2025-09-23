@@ -96,9 +96,9 @@ body {
 
 /* ✅ 철호(동키콩) — 시작 좌표(거의 맞음). 필요 시 0.5~1% 단위로 미세 조정 */
 .chulho-area {
-  left: 30%;
+  left: 27%;
   top: 74%;
-  width: 20%;
+  width: 13%;
   height: 46%;
   border-radius: 0;
 }
