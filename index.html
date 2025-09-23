@@ -156,7 +156,7 @@
 
       /* ✨ 반짝이 시드 */
       const twinkles = document.getElementById('twinkles');
-      function seedTwinkles(n = 28) {
+      function seedTwinkles(n = 40) {
         if (!twinkles) return;
         twinkles.innerHTML = '';
         for (let i = 0; i < n; i++) {
@@ -169,7 +169,7 @@
           const size = 2 + Math.random() * 3; // 2~5px
           s.style.setProperty('--size', size + 'px');
           s.style.animationDelay    = (Math.random() * 6).toFixed(2) + 's';
-          s.style.animationDuration = (4 + Math.random() * 4).toFixed(2) + 's';
+          s.style.animationDuration = (3 + Math.random() * 3).toFixed(2) + 's';
           twinkles.appendChild(s);
         }
       }
