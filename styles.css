@@ -35,8 +35,8 @@ body{font-family:'Galmuri11',monospace;background:#269CFE;color:#fff}
 
 /* ✅ 나현 – “오른쪽 + 살짝 아래”로 보정한 값 */
 .nahyun-area{
-  left: 21.8%;   /* 더 오른쪽으로 */
-  top:  73.0%;   /* 살짝 아래로 */
+  left: 15.8%;   /* 더 오른쪽으로 */
+  top:  80.0%;   /* 살짝 아래로 */
   width: 17.0%;
   height: 44.0%;
   border-radius:0;
