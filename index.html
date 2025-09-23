@@ -21,6 +21,9 @@
       <div class="hero-figure">
         <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
 
+        <!-- ✨ 반짝이 레이어 (이미지 위, 핫스팟 아래) -->
+        <div id="twinkles" class="twinkles" aria-hidden="true"></div>
+
         <!-- 캐릭터 핫스팟들 (투명) -->
         <button class="hotspot nahyun-area"   id="hs-nahyun"   aria-label="나현 캐릭터 열기"></button>
         <button class="hotspot chulho-area"   id="hs-chulho"   aria-label="김철호 캐릭터 열기"></button>
@@ -131,7 +134,6 @@
       // 초기: 기본 문구 출력 후 자동 숨김
       window.addEventListener("DOMContentLoaded", async () => {
         await typeWriter(defaultMessage, introText, 40);
-        // 다 나오면 부드럽게 숨김
         setTimeout(() => introText.classList.add("hidden"), 3000);
       });
 
@@ -151,6 +153,28 @@
       hsGuhee   .addEventListener("click", () => openVideo(GUHEE.video,    GUHEE.message));
       hsYonsoo  .addEventListener("click", () => openVideo(YONSOO.video,   YONSOO.message));
       hsKabmin  .addEventListener("click", () => openVideo(KABMIN.video,   KABMIN.message));
+
+      /* ✨ 반짝이 시드 */
+      const twinkles = document.getElementById('twinkles');
+      function seedTwinkles(n = 28) {
+        if (!twinkles) return;
+        twinkles.innerHTML = '';
+        for (let i = 0; i < n; i++) {
+          const s = document.createElement('span');
+          s.className = 'star';
+          // 가장자리 과밀 방지용 여백
+          s.style.left = (5 + Math.random() * 90) + '%';
+          s.style.top  = (6 + Math.random() * 88) + '%';
+
+          const size = 2 + Math.random() * 3; // 2~5px
+          s.style.setProperty('--size', size + 'px');
+          s.style.animationDelay    = (Math.random() * 6).toFixed(2) + 's';
+          s.style.animationDuration = (4 + Math.random() * 4).toFixed(2) + 's';
+          twinkles.appendChild(s);
+        }
+      }
+      // 초기 시드
+      window.addEventListener('DOMContentLoaded', () => seedTwinkles(26));
     </script>
   </body>
 </html>
