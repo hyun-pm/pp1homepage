@@ -21,11 +21,14 @@
       <div class="hero-figure">
         <img src="pp1.png" alt="Super PPM 캐릭터 이미지" class="hero-image" />
 
-        <!-- 🔴 나현 클릭 영역 (빨간 박스 표시됨) -->
+        <!-- 🔴 나현 클릭 영역 -->
         <button class="hotspot nahyun-area" id="hs-nahyun" aria-label="나현 캐릭터 열기"></button>
 
-        <!-- 🔴 철호(동키콩) 클릭 영역 (빨간 박스 표시됨) -->
+        <!-- 🔴 철호(동키콩) 클릭 영역 -->
         <button class="hotspot chulho-area" id="hs-chulho" aria-label="김철호 캐릭터 열기"></button>
+
+        <!-- 🔴 설지혜(키노피오) 클릭 영역 -->
+        <button class="hotspot jihye-area" id="hs-jihye" aria-label="설지혜 캐릭터 열기"></button>
       </div>
     </main>
 
@@ -41,6 +44,7 @@
       const logoBtn    = document.getElementById("logoBtn");
       const hsNahyun   = document.getElementById("hs-nahyun");
       const hsChulho   = document.getElementById("hs-chulho");
+      const hsJihye    = document.getElementById("hs-jihye");
 
       const defaultMessage = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
@@ -54,6 +58,10 @@
       const CHULHO = {
         message: "힘과 추진력으로 무거운 프로젝트를 과감히 밀어붙이는 파워 플레이어 김철호",
         video: "videos/chulho.mp4"
+      };
+      const JIHYE = {
+        message: "빠른 자료 정리와 꼼꼼한 지원으로 모험의 기초 체력을 책임지는 든든한 서포터 설지혜",
+        video: "videos/jihye.mp4"
       };
 
       // 모달
@@ -103,7 +111,7 @@
         typeWriter(defaultMessage, introText, 40);
       });
 
-      // 각 캐릭터 클릭
+      // 캐릭터 클릭 이벤트
       hsNahyun.addEventListener("click", () => {
         typeWriter(NAHYUN.message, introText, 35);
         openVideo(NAHYUN.video);
@@ -111,6 +119,10 @@
       hsChulho.addEventListener("click", () => {
         typeWriter(CHULHO.message, introText, 35);
         openVideo(CHULHO.video);
+      });
+      hsJihye.addEventListener("click", () => {
+        typeWriter(JIHYE.message, introText, 35);
+        openVideo(JIHYE.video);
       });
     </script>
   </body>
