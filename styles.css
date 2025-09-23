@@ -72,7 +72,7 @@ body {
   display: block;
 }
 
-/* 공통 핫스팟 스타일 (빨간 박스 ON) */
+/* 공통 핫스팟 (빨간 박스 ON: 위치 맞출 때 유용) */
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -107,6 +107,15 @@ body {
   top: 78%;
   width: 11%;
   height: 35%;
+  border-radius: 0;
+}
+
+/* 김수지(피치 공주) — 시작 좌표(거의 맞게 잡음). 미세조정은 0.5~1% 단위로 */
+.suji-area {
+  left: 52.5%;   /* 더 오른쪽이면 ↑, 왼쪽이면 ↓ */
+  top: 64%;      /* 더 아래면 ↑, 위면 ↓ */
+  width: 15%;    /* 폭 */
+  height: 55%;   /* 높이 (드레스까지) */
   border-radius: 0;
 }
 
