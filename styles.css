@@ -75,6 +75,38 @@ body {
   display: block;
 }
 
+/* ✨ 반짝이 레이어 (이미지 위, 핫스팟 아래) */
+.twinkles{
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:1; /* .hotspot(z-index:2)보다 낮게 */
+}
+
+/* 개별 별 */
+.star{
+  position:absolute;
+  width:var(--size);
+  height:var(--size);
+  border-radius:50%;
+  background: radial-gradient(circle,
+              rgba(255,255,255,0.95) 0 40%,
+              rgba(255,255,255,0.25) 60%,
+              transparent 70%);
+  opacity:0;
+  transform: scale(.6) rotate(0deg);
+  filter: blur(.2px);
+  animation: twinkle linear infinite;
+}
+
+/* 은은한 트윙클 */
+@keyframes twinkle{
+  0%,100% { opacity:0;   transform:scale(.6)  rotate(0deg);  }
+  10%     { opacity:.9;  transform:scale(1.05) rotate(35deg); }
+  20%     { opacity:.25; transform:scale(.8)  rotate(55deg); }
+  50%     { opacity:.7;  transform:scale(1.0) rotate(90deg); }
+  70%     { opacity:.2;  transform:scale(.7)  rotate(120deg); }
+}
+
 /* 핫스팟 (투명) */
 .hotspot {
   position: absolute;
@@ -128,9 +160,9 @@ body {
   font-size: clamp(16px, 2.2vw, 22px);
   line-height: 1.6;
   white-space: pre-line;
-  text-shadow: 0 2px 6px rgba(0,0,0,.55); /* 가독성 */
-  pointer-events: none; /* 클릭은 비디오로 전달 */
-  z-index: 2;          /* 비디오 위 */
+  text-shadow: 0 2px 6px rgba(0,0,0,.55);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .close-btn {
@@ -143,3 +175,4 @@ body {
 @media (max-width: 768px) {
   .pixel-text { font-size: 16px; top: 64px; }
 }
+
