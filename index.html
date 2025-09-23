@@ -31,6 +31,9 @@
 
         <!-- 🔴 김수지(피치 공주) -->
         <button class="hotspot suji-area" id="hs-suji" aria-label="김수지 캐릭터 열기"></button>
+
+        <!-- 🔴 정록정(요시) -->
+        <button class="hotspot rokjeong-area" id="hs-rokjeong" aria-label="정록정 캐릭터 열기"></button>
       </div>
     </main>
 
@@ -48,6 +51,7 @@
       const hsChulho   = document.getElementById("hs-chulho");
       const hsJihye    = document.getElementById("hs-jihye");
       const hsSuji     = document.getElementById("hs-suji");
+      const hsRokjeong = document.getElementById("hs-rokjeong");
 
       const defaultMessage = `우리는 마치 마리오 파티처럼, 각자 다른 스킬을 가진 캐릭터들이 모여 하나의 큰 모험을 만들어가는 팀입니다.
 누군가는 힘으로, 누군가는 아이디어로, 또 다른 누군가는 분위기를 밝히며,
@@ -69,6 +73,10 @@
       const SUJI = {
         message: "팀의 무드를 밝게 하고 위기에서 점프해 길을 열어주는 리더 김수지",
         video: "videos/suji.mp4"
+      };
+      const ROKJEONG = {
+        message: "아이디어를 빠르게 삼키고, 소화해서 팀 맞춤형으로 다시 내놓는 든든한 동료 정록정",
+        video: "videos/rokjeong.mp4" // ← 파일을 .mp4로 업로드해 주세요
       };
 
       // 모달 공통
@@ -135,7 +143,10 @@
         typeWriter(SUJI.message, introText, 35);
         openVideo(SUJI.video);
       });
+      hsRokjeong.addEventListener("click", () => {
+        typeWriter(ROKJEONG.message, introText, 35);
+        openVideo(ROKJEONG.video);
+      });
     </script>
   </body>
 </html>
-
