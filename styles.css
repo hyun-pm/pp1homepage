@@ -1,142 +1,55 @@
-/* 1) 로컬 갈무리11 폰트 등록 */
 @font-face {
   font-family: 'Galmuri11';
   src: url('/fonts/Galmuri11.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+  font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Galmuri11';
   src: url('/fonts/Galmuri11-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+  font-weight: 700; font-style: normal; font-display: swap;
 }
 
-/* 2) 기본값 */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
-body {
-  font-family: 'Galmuri11', monospace;
-  background: #269CFE;
-  color: #fff;
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:'Galmuri11',monospace;background:#269CFE;color:#fff}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:56px;padding:0 16px;display:flex;align-items:center;
+  background:linear-gradient(#269CFEcc,#BDF4FFcc);backdrop-filter:blur(6px);border-bottom:2px solid #ffffff55;z-index:100}
+.logo-btn{font-family:'Galmuri11',monospace;font-weight:700;background:#000;color:#fff;border:0;cursor:pointer;padding:8px 12px;
+  box-shadow:0 0 0 2px #fff inset,0 0 0 4px #000 inset,2px 2px 0 0 #000}
+.logo-btn:active{transform:translate(1px,1px)}
+
+.pixel-text{position:fixed;top:68px;left:0;right:0;z-index:90;padding:0 16px;text-align:center;font-weight:400;font-size:20px;
+  line-height:1.6;color:#fff;white-space:pre-line;pointer-events:none}
+
+/* 중앙 배치 + 이미지 기준 좌표용 래퍼 */
+.hero{min-height:100vh;display:grid;place-items:center;background:linear-gradient(#269CFE,#BDF4FF);
+  position:relative;padding-top:120px}
+.hero-figure{position:relative;width:min(90vw,calc(65vh * 1.779));aspect-ratio:2048/1151}
+.hero-image{width:100%;height:100%;object-fit:contain;display:block}
+
+/* 핫스팟(이미지 기준 %) */
+.hotspot{position:absolute;transform:translate(-50%,-50%);background:transparent;border:0;cursor:pointer;z-index:2}
+/* 개발 중 위치 확인하려면 아래 2줄 잠깐 켜기 */
+/* .hotspot{outline:2px dashed rgba(255,255,255,.8);background:rgba(255,255,255,.08)} */
+
+/* ✅ 나현 – “오른쪽 + 살짝 아래”로 보정한 값 */
+.nahyun-area{
+  left: 21.8%;   /* 더 오른쪽으로 */
+  top:  73.0%;   /* 살짝 아래로 */
+  width: 17.0%;
+  height: 44.0%;
+  border-radius:0;
 }
 
-/* 3) 상단 바(로고 버튼) */
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 56px; padding: 0 16px;
-  display: flex; align-items: center;
-  background: linear-gradient(#269CFEcc, #BDF4FFcc);
-  backdrop-filter: blur(6px);
-  border-bottom: 2px solid #ffffff55;
-  z-index: 100;
-}
-.logo-btn {
-  font-family: 'Galmuri11', monospace;
-  font-weight: 700;
-  background: #000; color: #fff; border: 0; cursor: pointer;
-  padding: 8px 12px;
-  box-shadow:
-    0 0 0 2px #fff inset,
-    0 0 0 4px #000 inset,
-    2px 2px 0 0 #000;
-}
-.logo-btn:active { transform: translate(1px,1px); }
+.video-modal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.6);
+  opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:120}
+.video-modal.show{opacity:1;pointer-events:auto}
+.video-wrap{width:min(800px,92vw);aspect-ratio:16/9;position:relative;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#charVideo{width:100%;height:100%;display:block}
+.close-btn{position:absolute;top:-12px;right:-12px;background:#000;color:#fff;border:0;cursor:pointer;padding:6px 10px;
+  box-shadow:0 0 0 2px #fff inset,0 0 0 4px #000 inset,2px 2px 0 0 #000}
 
-/* 4) 상단 텍스트(흰색만) */
-.pixel-text {
-  position: fixed;
-  top: 68px; left: 0; right: 0;
-  z-index: 90;
-  padding: 0 16px;
-  text-align: center;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 1.6;
-  color: #ffffff;
-  white-space: pre-line;
-  pointer-events: none;
+@media (max-width:768px){
+  .pixel-text{font-size:16px;top:64px}
 }
-
-/* 5) 히어로(배경 + 이미지) */
-.hero {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(#269CFE, #BDF4FF);
-  position: relative;
-  padding-top: 120px; /* 상단 텍스트가 겹치지 않도록 */
-}
-.hero-image {
-  max-width: 90%;
-  max-height: 65vh;
-  height: auto; display: block;
-}
-
-/* 6) 캐릭터 클릭 영역(나현: 직사각형 전체) */
-.hotspot {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  z-index: 20;
-  /* 개발 중 위치 보기(잠깐 켜기)
-  outline: 2px dashed rgba(255,255,255,.7);
-  background: rgba(255,255,255,.08);
-  */
-}
-.nahyun-area {
-  left: 20%;
-  top: 66%;
-  width: 14vw;   /* 필요 시 12~18vw */
-  height: 34vh;  /* 필요 시 28~38vh */
-  border-radius: 0;
-}
-.hotspot:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 2px;
-}
-
-/* 7) 비디오 모달 */
-.video-modal {
-  position: fixed; inset: 0;
-  display: grid; place-items: center;
-  background: rgba(0,0,0,.6);
-  opacity: 0; pointer-events: none; transition: opacity .2s ease;
-  z-index: 120;
-}
-.video-modal.show { opacity: 1; pointer-events: auto; }
-.video-wrap {
-  width: min(800px, 92vw);
-  aspect-ratio: 16/9;
-  position: relative;
-  background: #000;
-  box-shadow: 0 10px 30px rgba(0,0,0,.4);
-}
-#charVideo { width: 100%; height: 100%; display: block; }
-.close-btn {
-  position: absolute; top: -12px; right: -12px;
-  background: #000; color: #fff; border: 0; cursor: pointer;
-  padding: 6px 10px;
-  box-shadow:
-    0 0 0 2px #fff inset,
-    0 0 0 4px #000 inset,
-    2px 2px 0 0 #000;
-}
-
-/* 8) 반응형 */
-@media (max-width: 768px) {
-  .pixel-text { font-size: 16px; top: 64px; }
-  .hero-image  { max-width: 94%; max-height: 58vh; }
-  .nahyun-area {
-  left: 13.4%;
-  top: 66.2%;
-  width: 14.2%;
-  height: 50.4%;
-  border-radius: 0;
-}
-
-}
-
