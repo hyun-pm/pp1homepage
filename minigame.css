@@ -29,7 +29,11 @@
   z-index: 2;
 }
 .timer{ display: grid; gap: 6px; }
-.timer-label{ font-weight: 700; text-shadow:0 1px 3px rgba(0,0,0,.15); }
+.timer-label{ 
+  font-weight: 700; 
+  text-shadow:0 1px 3px rgba(0,0,0,.15);
+  color: #000; /* ✅ 글씨 검정색으로 수정 */
+}
 .timer-bar{ position: relative; height: 10px; background: #cfefff; border: 1px solid #9ad1ff; overflow: hidden; }
 .timer-bar > i{ position:absolute; inset:0; width:100%; background:#66b8ff; transform-origin:left center; transform: scaleX(1); }
 
