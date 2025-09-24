@@ -35,6 +35,7 @@ function preload(urls){
     img.src = url;
   })));
 }
+function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 // ===== 상태 =====
 let deck = [];           // 16개 카드
@@ -51,9 +52,11 @@ setup();
 
 async function setup(){
   cancelAnimationFrame(rafId);
+
   // UI 초기화
   statusEl.hidden = true;
   statusEl.textContent = '';
+  statusEl.classList.remove('show'); // ★ 추가: 디밍 클래스 제거
   timerLabel.textContent = '이미지 로딩 중…';
   timerFill.style.transform = 'scaleX(1)';
   board.innerHTML = '';
@@ -125,8 +128,6 @@ async function setup(){
   startTimer();
 }
 
-function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
-
 // ===== 타이머 =====
 function startTimer(){
   startAt = performance.now();
@@ -196,6 +197,7 @@ function win(){
   lock = true;
   statusEl.textContent = '🎉 성공! 모든 카드를 7초 안에 맞췄습니다.';
   statusEl.hidden = false;
+  statusEl.classList.add('show');   // ★ 추가: 디밍/클릭차단 켬
   timerLabel.textContent = '클리어!';
 }
 
@@ -208,6 +210,6 @@ function timeover(){
   });
   statusEl.textContent = '⏰ 시간 초과! RESTART로 다시 도전하세요.';
   statusEl.hidden = false;
+  statusEl.classList.add('show');   // ★ 추가: 디밍/클릭차단 켬
   timerLabel.textContent = '시간 종료';
 }
-
