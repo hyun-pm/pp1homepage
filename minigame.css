@@ -24,7 +24,7 @@
   align-items: center;
   margin-bottom: 10px;
 
-  /* ⬇️ 추가: 디밍 위로 올려서 RESTART 클릭 가능 */
+  /* 디밍 위로 올려서 RESTART 클릭 가능 */
   position: relative;
   z-index: 2;
 }
@@ -59,7 +59,10 @@
   transition: transform .38s cubic-bezier(.2,.8,.2,1);
   box-shadow: 0 4px 12px rgba(0,0,0,.18);
 }
+
+/* ✅ flipped = 뒷면 보이는 상태 */
 .card.flipped .card-inner{ transform: rotateY(180deg); }
+
 .card.matched .card-inner{ filter: saturate(1.15) drop-shadow(0 2px 4px rgba(0,0,0,.25)); }
 
 .face{
@@ -70,13 +73,25 @@
   overflow: hidden;
 }
 
-/* 뒷면 */
+/* 앞면: 회전 없음 */
+.face.front{
+  background: #fff;
+  border: 2px solid #ffffffcc;
+}
+.face.front img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 뒷면: 180도 회전 (카드가 회전하면 정면으로 보이게) */
 .face.back{
   background:
     radial-gradient(circle at 20% 20%, #bde6ff, transparent 50%),
     radial-gradient(circle at 80% 30%, #d4f2ff, transparent 50%),
     linear-gradient(180deg, #90d8ff, #e9fbff);
   border: 2px solid #ffffffcc;
+  transform: rotateY(180deg); /* ← ★ 핵심 */
 }
 .face.back.has-image{
   background: #000;
@@ -88,19 +103,7 @@
   opacity: .9;
 }
 
-/* 앞면 */
-.face.front{
-  transform: rotateY(180deg);
-  background: #fff;
-  border: 2px solid #ffffffcc;
-}
-.face.front img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 상태 텍스트 */
+/* 상태 텍스트 (디밍) */
 .status{
   position: absolute;
   inset: 0;
@@ -122,11 +125,8 @@
   visibility: hidden;
   transition: opacity .2s ease, visibility .2s ease;
 
-  /* ⬇️ 추가: HUD(z=2)보다 아래 두기 */
-  z-index: 1;
+  z-index: 1; /* HUD(2)보다 아래 */
 }
-
-/* 결과(성공/실패) 때만 보이게. HUD는 위라서 클릭 가능 */
 .status.show{
   opacity: 1;
   visibility: visible;
