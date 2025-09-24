@@ -101,22 +101,26 @@ body {
 .side-left{ left: 4%; transform: scaleX(-1); }
 .side-right{ right: 4%; }
 
-/* 손잡이 앵커(보이지 않음, 필요시 디버그 색상 넣어 확인) */
+/* 손잡이 앵커(보이지 않음) */
 .handle{
-  position: absolute; bottom: 130px;
+  position: absolute;
   width: 8px; height: 8px; border-radius: 50%;
-  background: transparent;
+  background: transparent; /* 디버그하려면 #f00 로 바꿔서 위치 확인 */
   z-index: 3; pointer-events: none;
 }
-.handle-left{ left: calc(4% + min(18vw,140px) - 10px); }
-.handle-right{ right: calc(4% + min(18vw,140px) - 10px); }
+.handle-left{ left: 0; bottom: 0; }
+.handle-right{ right: 0; bottom: 0; }
 
-/* 줄 (하늘색) */
+/* 줄 */
 .rope{
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  z-index: 1; pointer-events: none;
+  pointer-events: none;
+  /* 기본은 플레이어 뒤 */
+  z-index: 1;
 }
+.rope.front{ z-index: 3; }  /* 앞면일 때 플레이어 위로 */
+
 #ropePath{
   stroke: #66b8ff;           /* 하늘색 */
   stroke-width: 12;
@@ -135,7 +139,7 @@ body {
   z-index: 2;
 }
 
-/* 바닥선: 혼동 줄이기 위해 비활성(필요하면 아주 옅게) */
+/* 바닥선은 혼동 방지 위해 숨김 */
 .ground{ display:none; }
 
 /* 오버레이 */
