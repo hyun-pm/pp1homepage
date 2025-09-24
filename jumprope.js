@@ -1,8 +1,11 @@
 // ===== 엘리먼트 =====
 const STAGE = document.getElementById('stage');
 const PLAYER = document.getElementById('player');
-const ROPE_SVG = document.getElementById('ropeSvg');
-const ROPE_CIRCLE = document.getElementById('ropeCircle'); // HTML의 <circle id="ropeCircle">
+
+const ROPE_SVG  = document.getElementById('ropeSvg');
+const ROPE_PATH = document.getElementById('ropePath');
+const HANDLE_L  = document.getElementById('handleLeft');
+const HANDLE_R  = document.getElementById('handleRight');
 
 const STATUS = document.getElementById('statusText');
 const SCORE_EL = document.getElementById('score');
@@ -19,15 +22,13 @@ const START_SPEED = 150;  // deg/s
 const SPEED_UP = 8;       // per revolution
 const MAX_SPEED = 480;    // deg/s
 
-// "바닥 스침" 기준 각도 (시계방향 회전에서 바닥 통과 지점)
-const GROUND_ANGLE = 90;           // 90°
-const HIT_WINDOW_DEG = 18;         // ±18°
-const HIT_WINDOW_RAD = HIT_WINDOW_DEG * Math.PI / 180;
-const SAFE_HEIGHT = 46;            // 넘었다고 인정하는 높이(px)
+const GROUND_ANGLE = 90;      // 로프가 바닥을 스칠 때 각도
+const HIT_WINDOW_DEG = 18;    // ±18°
+const SAFE_HEIGHT = 46;       // 넘었다고 인정하는 높이(px)
 
 // ===== 상태 =====
 let running = false;
-let angle = -120;         // 시작 각도(왼쪽 위에서 내려오도록), 0에 가까우면 시작하자마자 죽음
+let angle = -120;         // 시작 각도(바닥에서 멀리)
 let omega = START_SPEED;  // deg/s
 let lastTime = 0;
 let y = 0;                // 플레이어 발 높이(px)
@@ -36,8 +37,11 @@ let score = 0;
 let best = Number(localStorage.getItem('ppm_jump_best') || 0);
 BEST_EL.textContent = best;
 
-// 로프 길이(둘레) — viewBox/반지름이 바뀔 때마다 갱신
-let ropeLen = 1000 * Math.PI * 0.6; // 초기 대충값(레이아웃 후 갱신)
+// 손 좌표 / 중점 / 반경
+let L = {x:100, y:100};
+let R = {x:900, y:100};
+let C = {x:500, y:100};  // midpoint
+let RAD = 200;           // 제어점 회전 반경
 
 // ===== 유틸 =====
 const clamp = (v,min,max)=> Math.max(min, Math.min(max, v));
@@ -47,45 +51,49 @@ const shortestDegDist = (a,b) => {
   return Math.min(d, 360 - d);
 };
 
-// 로프 시각 회전용: 원은 회전해도 안 보이므로 dashoffset으로 "움직임"을 만든다.
-function updateRopeVisualByAngle(deg){
-  // 각도 → dashoffset으로 변환
-  const offset = (deg / 360) * ropeLen;
-  ROPE_CIRCLE.style.strokeDashoffset = `${offset}`;
-}
-
-// viewBox / 원 둘레 / dasharray 세팅
-function layoutRope(){
+// 스테이지 픽셀 좌표를 SVG 뷰박스로 맞춰줌
+function layout(){
   const rect = STAGE.getBoundingClientRect();
-  // 스테이지 픽셀 크기를 viewBox로 그대로 사용
   ROPE_SVG.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
 
-  // circle의 cx, cy, r는 HTML에서 초기값을 쓰되, 둘레만 실제 픽셀 기준으로 다시 계산
-  const cx = Number(ROPE_CIRCLE.getAttribute('cx'));
-  const cy = Number(ROPE_CIRCLE.getAttribute('cy'));
-  const r  = Number(ROPE_CIRCLE.getAttribute('r'));
+  const lr = HANDLE_L.getBoundingClientRect();
+  const rr = HANDLE_R.getBoundingClientRect();
 
-  // 만약 r가 상대값(디폴트)라면 스테이지 폭에 비례해 보정 (원본 HTML은 1000 기반이었음)
-  const scaleX = rect.width / 1000;
-  const scaleY = rect.height / 1000;
-  const scale = (scaleX + scaleY) / 2; // 대충 평균 스케일
-  const realR = r * scale;
+  // 손잡이 중심 (스테이지 좌표계)
+  L.x = (lr.left + lr.right)/2 - rect.left;
+  L.y = (lr.top  + lr.bottom)/2 - rect.top;
+  R.x = (rr.left + rr.right)/2 - rect.left;
+  R.y = (rr.top  + rr.bottom)/2 - rect.top;
 
-  ropeLen = 2 * Math.PI * realR;
+  // 중점/반경
+  C.x = (L.x + R.x)/2;
+  C.y = (L.y + R.y)/2;
+  const dx = R.x - L.x;
+  const dy = R.y - L.y;
+  RAD = Math.hypot(dx, dy) * 0.55; // 손 사이 거리의 절반보다 약간 크게
 
-  // 거의 끊김 없는 실선이지만 1px 갭을 둠 → dashoffset 변화가 "회전"처럼 보임
-  const gap = Math.max(1, Math.round(ropeLen * 0.006)); // 화면에 따라 1~몇 px
-  const solid = Math.max(1, Math.round(ropeLen - gap));
-  ROPE_CIRCLE.style.strokeDasharray = `${solid} ${gap}`;
+  // 최초 로프 그리기
+  drawRope(angle);
+}
 
-  // 현재 각도 반영
-  updateRopeVisualByAngle(angle);
+// angle(도)에 따라 로프 곡선을 그린다.
+// - 좌/우 손은 고정.
+// - 제어점(QBezier)이 중점 C를 중심으로 반지름 RAD 원을 따라 회전 → ‘하나의 줄’이 도는 느낌.
+function drawRope(deg){
+  const t = deg * Math.PI / 180;
+  const biasX = 0.85;  // 좌우로 조금 더 크게
+  const biasY = 1.05;  // 위아래는 더 크게 (지면 쓸어내리는 느낌)
+  const cx = C.x + Math.cos(t) * RAD * biasX;
+  const cy = C.y + Math.sin(t) * RAD * biasY;
+
+  const d = `M ${L.x} ${L.y} Q ${cx} ${cy} ${R.x} ${R.y}`;
+  ROPE_PATH.setAttribute('d', d);
 }
 
 // ===== 시작/리셋 =====
 function reset(){
   running = false;
-  angle = -120;         // 안전한 시작 각도(바닥 근처가 아님)
+  angle = -120;
   omega = START_SPEED;
   lastTime = 0;
   y = 0; vy = 0;
@@ -93,9 +101,7 @@ function reset(){
   SCORE_EL.textContent = score;
   setPlayerY(0);
 
-  layoutRope();                 // ← 중요! 시작 전에 레이아웃 갱신
-  updateRopeVisualByAngle(angle);
-
+  layout(); // ← 중요: 손 위치를 기반으로 첫 그리기
   OVERLAY.hidden = false;
   OVERLAY_TEXT.textContent = 'START!';
   STATUS.textContent = '스페이스 / 탭으로 점프!';
@@ -124,7 +130,7 @@ function gameover(){
 // ===== 렌더/물리 =====
 function setAngle(deg){
   angle = deg;
-  updateRopeVisualByAngle(deg);
+  drawRope(deg);
 }
 function setPlayerY(py){
   PLAYER.style.transform = `translateX(-50%) translateY(${-py}px)`;
@@ -163,7 +169,7 @@ function tick(now){
   if (y <= 0){ y = 0; vy = 0; }
   setPlayerY(y);
 
-  // 충돌 판정: 바닥 스침 각도(GROUND_ANGLE) 근처 통과 + 점프 부족
+  // 충돌 판정: 바닥 스침 각도(90°) 근처 통과 + 점프 부족
   const near = shortestDegDist(angle, GROUND_ANGLE) <= HIT_WINDOW_DEG;
   if (near && y < SAFE_HEIGHT){
     gameover();
@@ -182,12 +188,9 @@ document.addEventListener('keydown', (e)=>{
 });
 document.addEventListener('pointerdown', jump);
 RESTART.addEventListener('click', reset);
-OVERLAY_START.addEventListener('click', ()=>{
-  reset();
-  start();
-});
-window.addEventListener('resize', layoutRope);
+OVERLAY_START.addEventListener('click', ()=>{ reset(); start(); });
+window.addEventListener('resize', layout);
 
 // ===== 초기화 =====
-layoutRope();
+layout();
 reset();
