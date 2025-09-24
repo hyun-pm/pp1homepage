@@ -11,7 +11,7 @@ const CHARACTERS = [
 ];
 
 const SHOW_ALL_MS = 3000;   // 시작 공개 3초 (앞면)
-const LIMIT_MS    = 10000;   // 제한시간 7초
+const LIMIT_MS    = 10000;   // 제한시간 10초
 
 // ===== 엘리먼트 =====
 const board      = document.getElementById('board');
@@ -117,7 +117,7 @@ async function setup(){
   // 시작 연출: 3초 동안 "앞면" 보여주고 → 모두 뒤집어 "뒷면" 만들기
   const allCards = [...board.querySelectorAll('.card')];
   // 기본 상태는 앞면(= flipped 없음)
-  timerLabel.textContent = '시작! 카드 암기 시간 1초';
+  timerLabel.textContent = '시작! 카드 암기 시간 3초';
   await wait(SHOW_ALL_MS);
 
   // 모두 뒷면으로 전환
