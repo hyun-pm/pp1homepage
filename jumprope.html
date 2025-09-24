@@ -34,29 +34,33 @@
           <img src="./jumprope/guhee.png" alt="줄 돌리는 구희" class="side side-left" />
           <img src="./jumprope/chulho.png" alt="줄 돌리는 철호" class="side side-right" />
 
-          <!-- 줄 (SVG 로프 + 회전 축) -->
-          <svg class="rope" viewBox="0 0 400 400" aria-hidden="true">
-            <!-- 중앙을 기준으로 도는 반원 호(지면 가까이) -->
-            <path id="ropePath"
-                  d="M 40 320 A 160 160 0 0 0 360 320"
-                  fill="none" stroke="#7a4" stroke-width="8" stroke-linecap="round"/>
+          <!-- 손잡이 앵커(로프 끝이 붙는 지점) -->
+          <div class="handle handle-left" id="handleLeft" aria-hidden="true"></div>
+          <div class="handle handle-right" id="handleRight" aria-hidden="true"></div>
+
+          <!-- 줄 (SVG 원) -->
+          <svg class="rope" id="ropeSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <circle id="ropeCircle" cx="500" cy="500" r="300"
+              fill="none" stroke="#3e8a42" stroke-width="12" stroke-linecap="round"/>
           </svg>
 
           <!-- 점프하는 캐릭터 -->
           <img src="./jumprope/nahyun.png" alt="점프하는 나현" id="player" class="player" />
+
+          <!-- 바닥선(약하게) -->
           <div class="ground" aria-hidden="true"></div>
 
           <!-- 상태 오버레이 -->
           <div class="overlay" id="overlay" aria-live="polite" hidden>
             <div class="overlay-box">
-              <p id="overlayText">시작!</p>
-              <button class="restart-btn big" id="overlayRestart" type="button">다시 시작</button>
+              <p id="overlayText">START!</p>
+              <button class="restart-btn big" id="overlayRestart" type="button">START</button>
             </div>
           </div>
         </div>
 
         <p class="rules">
-          규칙: 줄이 바닥을 스칠 때(회전 각도 0° 근처) <strong>스페이스/클릭</strong>으로 점프!
+          규칙: 줄이 바닥을 스칠 때(회전 각도 90° 근처) <strong>스페이스/클릭</strong>으로 점프!
           시간이 지날수록 <strong>줄 속도는 빨라집니다.</strong>
         </p>
       </div>
