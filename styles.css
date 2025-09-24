@@ -26,6 +26,7 @@ body {
   backdrop-filter: blur(6px);
   border-bottom: 2px solid #ffffff55;
   z-index: 100;
+  gap: 8px; /* ★ 추가: SUPERPPM / MINI GAME 사이 간격 */
 }
 .logo-btn {
   font-family: 'Galmuri11', monospace;
@@ -36,6 +37,16 @@ body {
   /* ✅ 커서 이미지 적용 */
   cursor: url('./cursor.png') 16 16, pointer;
 }
+/* ★ 추가: a.logo-btn도 버튼과 동일한 룩 & 밑줄 제거 */
+a.logo-btn {
+  text-decoration: none;   /* 밑줄 제거 */
+  color: #fff;             /* 링크 기본/visited 색 통일 */
+  display: inline-block;   /* 버튼과 동일한 박스 모델 */
+}
+a.logo-btn:visited { color: #fff; }
+button.logo-btn:active,
+a.logo-btn:active { transform: translate(1px,1px); }
+
 .logo-btn:active { transform: translate(1px,1px); }
 
 /* 히어로 (그라데이션 배경) */
