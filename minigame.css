@@ -1,1 +1,113 @@
+/* 레이아웃 */
+.game-outer{
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(#269CFE, #BDF4FF);
+  padding-top: 120px; /* topbar 보정 */
+}
+.game-wrap{
+  width: min(92vw, 620px);
+  background: #E9FBFF;
+  border: 2px solid #ffffffaa;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  border-radius: 12px;
+  padding: 14px 14px 18px;
+  position: relative;
+}
+
+/* HUD / 타이머 */
+.hud{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.timer{ display: grid; gap: 6px; }
+.timer-label{ font-weight: 700; text-shadow:0 1px 3px rgba(0,0,0,.15); }
+.timer-bar{ position: relative; height: 10px; background: #cfefff; border: 1px solid #9ad1ff; overflow: hidden; }
+.timer-bar > i{ position:absolute; inset:0; width:100%; background:#66b8ff; transform-origin:left center; transform: scaleX(1); }
+
+/* 보드 */
+.board{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+/* 카드(버튼) */
+.card{
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  aspect-ratio: 3/4;
+  perspective: 900px;
+  cursor: url('./cursor.png') 16 16, pointer;
+}
+.card[disabled]{ cursor: not-allowed; }
+
+.card-inner{
+  position: absolute; inset:0;
+  border-radius: 10px;
+  transform-style: preserve-3d;
+  transition: transform .38s cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+.card.flipped .card-inner{ transform: rotateY(180deg); }
+.card.matched .card-inner{ filter: saturate(1.15) drop-shadow(0 2px 4px rgba(0,0,0,.25)); }
+
+.face{
+  position: absolute; inset:0;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+/* 뒷면 */
+.face.back{
+  background:
+    radial-gradient(circle at 20% 20%, #bde6ff, transparent 50%),
+    radial-gradient(circle at 80% 30%, #d4f2ff, transparent 50%),
+    linear-gradient(180deg, #90d8ff, #e9fbff);
+  border: 2px solid #ffffffcc;
+}
+.face.back.has-image{
+  background: #000;
+}
+.face.back img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .9;
+}
+
+/* 앞면 */
+.face.front{
+  transform: rotateY(180deg);
+  background: #fff;
+  border: 2px solid #ffffffcc;
+}
+.face.front img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 상태 텍스트 */
+.status{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(18px, 2.2vw, 28px);
+  text-shadow: 0 2px 6px rgba(0,0,0,.55);
+  border-radius: 10px;
+}
 
