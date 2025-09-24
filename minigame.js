@@ -11,7 +11,7 @@ const CHARACTERS = [
 ];
 
 const SHOW_ALL_MS = 3000;   // 시작 공개 3초 (앞면)
-const LIMIT_MS    = 7000;   // 제한시간 7초
+const LIMIT_MS    = 10000;   // 제한시간 7초
 
 // ===== 엘리먼트 =====
 const board      = document.getElementById('board');
@@ -114,7 +114,7 @@ async function setup(){
     board.appendChild(btn);
   }
 
-  // 시작 연출: 1초 동안 "앞면" 보여주고 → 모두 뒤집어 "뒷면" 만들기
+  // 시작 연출: 3초 동안 "앞면" 보여주고 → 모두 뒤집어 "뒷면" 만들기
   const allCards = [...board.querySelectorAll('.card')];
   // 기본 상태는 앞면(= flipped 없음)
   timerLabel.textContent = '시작! 카드 암기 시간 1초';
@@ -200,7 +200,7 @@ async function onFlip(btn){
 function win(){
   cancelAnimationFrame(rafId);
   lock = true;
-  statusEl.textContent = '🎉 성공! 모든 카드를 7초 안에 맞췄습니다.';
+  statusEl.textContent = '🎉 성공! 모든 카드를 10초 안에 맞췄습니다.';
   statusEl.hidden = false;
   statusEl.classList.add('show');   // 디밍 표시(보드 클릭 차단), HUD는 위라 클릭 가능
   timerLabel.textContent = '클리어!';
