@@ -109,5 +109,19 @@
   font-size: clamp(18px, 2.2vw, 28px);
   text-shadow: 0 2px 6px rgba(0,0,0,.55);
   border-radius: 10px;
+
+  /* ★ 추가: 게임 중엔 클릭 가로채지 않도록 */
+  pointer-events: none;
+
+  /* ★ 추가: 기본은 보이지 않게 */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease, visibility .2s ease;
 }
 
+/* ★ 추가: 결과(성공/실패) 표시할 때만 보여주고 클릭 차단 */
+.status.show{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
