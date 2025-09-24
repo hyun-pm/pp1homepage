@@ -11,7 +11,7 @@ const CHARACTERS = [
 ];
 
 const SHOW_ALL_MS = 3000;   // 시작 공개 3초 (앞면)
-const LIMIT_MS    = 10000;   // 제한시간 10초
+const LIMIT_MS    = 10000;  // 제한시간 10초
 
 // ===== 엘리먼트 =====
 const board      = document.getElementById('board');
@@ -38,10 +38,10 @@ function preload(urls){
 function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 // ===== 상태 =====
-let deck = [];           // 16개 카드
-let first = null;        // 첫 선택 카드 엘리먼트
-let lock = true;         // 입력 잠금
-let matchedCount = 0;    // 매칭된 카드쌍 수(0~8)
+let deck = [];
+let first = null;
+let lock = true;
+let matchedCount = 0;
 let rafId = null;
 let startAt = 0;
 
@@ -114,15 +114,17 @@ async function setup(){
     board.appendChild(btn);
   }
 
-  // 시작 연출: 3초 동안 "앞면" 보여주고 → 모두 뒤집어 "뒷면" 만들기
+  // 시작 연출: 카운트다운 표시
   const allCards = [...board.querySelectorAll('.card')];
   // 기본 상태는 앞면(= flipped 없음)
-  timerLabel.textContent = '시작! 카드 암기 시간 3초';
-  await wait(SHOW_ALL_MS);
+  for (let i = 3; i > 0; i--) {
+    timerLabel.textContent = `카드 암기 시간 ${i}`;
+    await wait(1000);
+  }
 
   // 모두 뒷면으로 전환
   allCards.forEach(c => c.classList.add('flipped'));
-  lock = false; // 입력 해제
+  lock = false;
   startTimer();
 }
 
@@ -157,11 +159,9 @@ async function onFlip(btn){
   if (lock) return;
   if (btn.classList.contains('matched')) return;
 
-  // 현재 뒷면이면 앞면으로 보여주기 (flipped 제거)
   if (btn.classList.contains('flipped')) {
     btn.classList.remove('flipped');
   } else {
-    // 이미 앞면이면 무시
     return;
   }
 
@@ -173,21 +173,17 @@ async function onFlip(btn){
   // 두 번째 선택
   lock = true;
   const second = btn;
-
   const isMatch = first.dataset.key === second.dataset.key;
 
   if (isMatch){
-    // 매칭: 앞면 상태 유지 + 매칭 표시 + 재클릭 방지
     first.classList.add('matched');
     second.classList.add('matched');
     first.setAttribute('disabled','true');
     second.setAttribute('disabled','true');
-
     matchedCount += 1;
     first = null;
     lock = false;
   } else {
-    // 실패: 잠깐 보여준 뒤 다시 모두 뒷면으로 (flipped 추가)
     await wait(550);
     first.classList.add('flipped');
     second.classList.add('flipped');
@@ -202,16 +198,15 @@ function win(){
   lock = true;
   statusEl.textContent = '🎉 성공! 모든 카드를 10초 안에 맞췄습니다.';
   statusEl.hidden = false;
-  statusEl.classList.add('show');   // 디밍 표시(보드 클릭 차단), HUD는 위라 클릭 가능
+  statusEl.classList.add('show');
   timerLabel.textContent = '클리어!';
 }
 
 function timeover(){
   cancelAnimationFrame(rafId);
   lock = true;
-  // 뒤집혀 있던 카드들 다시 닫기 & 입력 막기 (이미 뒷면이니 별도 처리 불필요)
   statusEl.textContent = '⏰ 시간 초과! RESTART로 다시 도전하세요.';
   statusEl.hidden = false;
-  statusEl.classList.add('show');   // 디밍 표시(보드 클릭 차단), HUD는 위라 클릭 가능
+  statusEl.classList.add('show');
   timerLabel.textContent = '시간 종료';
 }
