@@ -10,7 +10,7 @@ const CHARACTERS = [
   { key: 'kabmin',   label: '김갑민' },
 ];
 
-const SHOW_ALL_MS = 1000;   // 시작 공개 1초 (앞면)
+const SHOW_ALL_MS = 3000;   // 시작 공개 3초 (앞면)
 const LIMIT_MS    = 7000;   // 제한시간 7초
 
 // ===== 엘리먼트 =====
