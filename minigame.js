@@ -56,7 +56,7 @@ async function setup(){
   // UI 초기화
   statusEl.hidden = true;
   statusEl.textContent = '';
-  statusEl.classList.remove('show'); // ★ 추가: 디밍 클래스 제거
+  statusEl.classList.remove('show'); // 디밍 제거
   timerLabel.textContent = '이미지 로딩 중…';
   timerFill.style.transform = 'scaleX(1)';
   board.innerHTML = '';
@@ -99,7 +99,7 @@ async function setup(){
     backImg.draggable = false;
 
     back.appendChild(backImg);
-    back.classList.add('has-image'); // back.png 없으면 그냥 안 보임
+    back.classList.add('has-image');
 
     // 앞면
     const front = document.createElement('div');
@@ -173,16 +173,18 @@ async function onFlip(btn){
   const isMatch = first.dataset.key === second.dataset.key;
 
   if (isMatch){
-    first.classList.add('matched');
-    second.classList.add('matched');
+    /* ⬇️ 수정: 매칭 시에도 'flipped' 유지 */
+    first.classList.add('flipped', 'matched');
+    second.classList.add('flipped', 'matched');
     first.setAttribute('disabled','true');
     second.setAttribute('disabled','true');
-    matchedCount += 1; // 쌍 1개 완료
-    // 바로 다음 입력 허용
+
+    matchedCount += 1;
+
     first = null;
     lock = false;
   } else {
-    // 잠깐 보여주고 다시 뒤집기
+    // 실패: 잠깐 보여주고 다시 닫기
     await wait(550);
     first.classList.remove('flipped');
     second.classList.remove('flipped');
@@ -197,7 +199,7 @@ function win(){
   lock = true;
   statusEl.textContent = '🎉 성공! 모든 카드를 7초 안에 맞췄습니다.';
   statusEl.hidden = false;
-  statusEl.classList.add('show');   // ★ 추가: 디밍/클릭차단 켬
+  statusEl.classList.add('show');   // 디밍 표시(보드 클릭 차단), HUD는 위라 클릭 가능
   timerLabel.textContent = '클리어!';
 }
 
@@ -210,6 +212,6 @@ function timeover(){
   });
   statusEl.textContent = '⏰ 시간 초과! RESTART로 다시 도전하세요.';
   statusEl.hidden = false;
-  statusEl.classList.add('show');   // ★ 추가: 디밍/클릭차단 켬
+  statusEl.classList.add('show');   // 디밍 표시(보드 클릭 차단), HUD는 위라 클릭 가능
   timerLabel.textContent = '시간 종료';
 }
