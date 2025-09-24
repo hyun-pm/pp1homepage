@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Super PPM – 줄넘기</title>
+    <link rel="stylesheet" href="jumprope.css" />
+    <meta name="color-scheme" content="light" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="logo-btn" href="/" aria-label="홈으로">SUPERPPM</a>
+      <a class="logo-btn" href="/minigame.html" aria-label="카드게임으로">MINI GAME</a>
+      <span class="logo-btn current" aria-current="page">JUMP ROPE</span>
+    </header>
+
+    <main class="game-outer" role="main">
+      <div class="game-wrap">
+        <div class="hud">
+          <div class="timer">
+            <div class="timer-label" id="statusText">스페이스 / 탭으로 점프!</div>
+            <div class="scores">
+              <span>점수: <strong id="score">0</strong></span>
+              <span class="sep">|</span>
+              <span>최고기록: <strong id="best">0</strong></span>
+            </div>
+          </div>
+          <button class="restart-btn" id="restartBtn" type="button" aria-label="다시 시작">RESTART</button>
+        </div>
+
+        <!-- 무대 -->
+        <div class="stage" id="stage" aria-label="줄넘기 무대">
+          <!-- 좌/우 줄 돌리는 캐릭터 -->
+          <img src="./jumprope/guhee.png" alt="줄 돌리는 구희" class="side side-left" />
+          <img src="./jumprope/chulho.png" alt="줄 돌리는 철호" class="side side-right" />
+
+          <!-- 줄 (SVG 로프 + 회전 축) -->
+          <svg class="rope" viewBox="0 0 400 400" aria-hidden="true">
+            <!-- 중앙을 기준으로 도는 반원 호(지면 가까이) -->
+            <path id="ropePath"
+                  d="M 40 320 A 160 160 0 0 0 360 320"
+                  fill="none" stroke="#7a4" stroke-width="8" stroke-linecap="round"/>
+          </svg>
+
+          <!-- 점프하는 캐릭터 -->
+          <img src="./jumprope/nahyun.png" alt="점프하는 나현" id="player" class="player" />
+          <div class="ground" aria-hidden="true"></div>
+
+          <!-- 상태 오버레이 -->
+          <div class="overlay" id="overlay" aria-live="polite" hidden>
+            <div class="overlay-box">
+              <p id="overlayText">시작!</p>
+              <button class="restart-btn big" id="overlayRestart" type="button">다시 시작</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="rules">
+          규칙: 줄이 바닥을 스칠 때(회전 각도 0° 근처) <strong>스페이스/클릭</strong>으로 점프!
+          시간이 지날수록 <strong>줄 속도는 빨라집니다.</strong>
+        </p>
+      </div>
+    </main>
+
+    <script src="jumprope.js"></script>
+  </body>
+</html>
