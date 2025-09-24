@@ -20,15 +20,16 @@ const GRAVITY = 2300;     // px/s^2
 const JUMP_VY = 930;      // px/s
 const START_SPEED = 150;  // deg/s
 const SPEED_UP = 8;       // per revolution
-const MAX_SPEED = 480;    // deg/s
+const MAX_SPEED = 520;    // deg/s
 
-const GROUND_ANGLE = 90;      // 로프가 바닥을 스칠 때 각도
-const HIT_WINDOW_DEG = 18;    // ±18°
-const SAFE_HEIGHT = 46;       // 넘었다고 인정하는 높이(px)
+// angle=0 이 "앞 바닥" (넘어야 하는 순간)
+const BOTTOM_FRONT_ANGLE = 0;   // 기준
+const HIT_WINDOW_DEG = 16;      // ±16°
+const SAFE_HEIGHT = 50;         // 이 높이(px) 이상이면 성공으로 간주
 
 // ===== 상태 =====
 let running = false;
-let angle = -120;         // 시작 각도(바닥에서 멀리)
+let angle = -110;         // 시작 각도(앞바닥에서 멀리)
 let omega = START_SPEED;  // deg/s
 let lastTime = 0;
 let y = 0;                // 플레이어 발 높이(px)
@@ -37,21 +38,22 @@ let score = 0;
 let best = Number(localStorage.getItem('ppm_jump_best') || 0);
 BEST_EL.textContent = best;
 
-// 손 좌표 / 중점 / 반경
+// 손 좌표 / 중점 / 타원 반경
 let L = {x:100, y:100};
 let R = {x:900, y:100};
 let C = {x:500, y:100};  // midpoint
-let RAD = 200;           // 제어점 회전 반경
+let RX = 260;            // 타원의 가로 반경
+let RY = 180;            // 타원의 세로 반경 (크면 앞/뒤 움직임이 강조)
 
 // ===== 유틸 =====
 const clamp = (v,min,max)=> Math.max(min, Math.min(max, v));
 const norm360 = a => { a%=360; if(a<0)a+=360; return a; };
-const shortestDegDist = (a,b) => {
+const shortDegDist = (a,b) => {
   let d = Math.abs(norm360(a) - norm360(b));
   return Math.min(d, 360 - d);
 };
 
-// 스테이지 픽셀 좌표를 SVG 뷰박스로 맞춰줌
+// 스테이지 픽셀 좌표로 앵커 재계산
 function layout(){
   const rect = STAGE.getBoundingClientRect();
   ROPE_SVG.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
@@ -65,26 +67,28 @@ function layout(){
   R.x = (rr.left + rr.right)/2 - rect.left;
   R.y = (rr.top  + rr.bottom)/2 - rect.top;
 
-  // 중점/반경
+  // 중점
   C.x = (L.x + R.x)/2;
   C.y = (L.y + R.y)/2;
-  const dx = R.x - L.x;
-  const dy = R.y - L.y;
-  RAD = Math.hypot(dx, dy) * 0.55; // 손 사이 거리의 절반보다 약간 크게
 
-  // 최초 로프 그리기
+  // 손 사이 거리 기반으로 타원 반경을 정해 "앞/뒤" 깊이감을 줌
+  const handDist = Math.hypot(R.x - L.x, R.y - L.y);
+  RX = handDist * 0.55;      // 좌우로 넓게
+  RY = handDist * 0.38;      // 위/아래로 과하지 않게 (앞바닥 스침을 분명히)
+
   drawRope(angle);
 }
 
 // angle(도)에 따라 로프 곡선을 그린다.
-// - 좌/우 손은 고정.
-// - 제어점(QBezier)이 중점 C를 중심으로 반지름 RAD 원을 따라 회전 → ‘하나의 줄’이 도는 느낌.
+//  - 좌/우 손은 고정.
+//  - 제어점(QBezier)이 중심 C를 기준으로 타원 궤도를 따라 회전.
+//  - t = angle(도)를 라디안으로 바꾼 뒤, "0°=앞바닥"이 되도록 +90° 오프셋.
 function drawRope(deg){
-  const t = deg * Math.PI / 180;
-  const biasX = 0.85;  // 좌우로 조금 더 크게
-  const biasY = 1.05;  // 위아래는 더 크게 (지면 쓸어내리는 느낌)
-  const cx = C.x + Math.cos(t) * RAD * biasX;
-  const cy = C.y + Math.sin(t) * RAD * biasY;
+  const t = (deg * Math.PI / 180) + (Math.PI / 2); // 0° -> 아래쪽(앞바닥)
+  const depthBoost = 1.08; // 앞쪽으로 약간 더 내려오게(시각적 강조)
+
+  const cx = C.x + Math.cos(t) * RX * 0.9;            // 좌우 살짝 덜 넓게
+  const cy = C.y + Math.sin(t) * RY * depthBoost;     // 앞/뒤 느낌 강조
 
   const d = `M ${L.x} ${L.y} Q ${cx} ${cy} ${R.x} ${R.y}`;
   ROPE_PATH.setAttribute('d', d);
@@ -93,15 +97,16 @@ function drawRope(deg){
 // ===== 시작/리셋 =====
 function reset(){
   running = false;
-  angle = -120;
+  angle = -110;             // 안전한 시작
   omega = START_SPEED;
   lastTime = 0;
+
   y = 0; vy = 0;
   score = 0;
   SCORE_EL.textContent = score;
   setPlayerY(0);
 
-  layout(); // ← 중요: 손 위치를 기반으로 첫 그리기
+  layout();                 // ← 중요: 손 위치 반영
   OVERLAY.hidden = false;
   OVERLAY_TEXT.textContent = 'START!';
   STATUS.textContent = '스페이스 / 탭으로 점프!';
@@ -139,7 +144,7 @@ function setPlayerY(py){
 // ===== 입력 =====
 function jump(){
   if (!running){
-    start(); // 첫 입력으로 시작
+    start();         // 첫 입력으로 시작
   }
   if (y <= 0){
     y = 0;
@@ -169,9 +174,9 @@ function tick(now){
   if (y <= 0){ y = 0; vy = 0; }
   setPlayerY(y);
 
-  // 충돌 판정: 바닥 스침 각도(90°) 근처 통과 + 점프 부족
-  const near = shortestDegDist(angle, GROUND_ANGLE) <= HIT_WINDOW_DEG;
-  if (near && y < SAFE_HEIGHT){
+  // 충돌 판정: "앞바닥(0°)" 근처일 때 + 높이 부족이면 실패
+  const nearFrontBottom = shortDegDist(angle, BOTTOM_FRONT_ANGLE) <= HIT_WINDOW_DEG;
+  if (nearFrontBottom && y < SAFE_HEIGHT){
     gameover();
     return;
   }
