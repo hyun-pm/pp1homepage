@@ -38,10 +38,9 @@
           <div class="handle handle-left" id="handleLeft" aria-hidden="true"></div>
           <div class="handle handle-right" id="handleRight" aria-hidden="true"></div>
 
-          <!-- 줄 (SVG 원) -->
+          <!-- 줄: path 하나로 ‘하나의 줄’ 표현 -->
           <svg class="rope" id="ropeSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-            <circle id="ropeCircle" cx="500" cy="500" r="300"
-              fill="none" stroke="#3e8a42" stroke-width="12" stroke-linecap="round"/>
+            <path id="ropePath" d="M0 0 L1000 0" fill="none" stroke="#3e8a42" stroke-width="12" stroke-linecap="round"/>
           </svg>
 
           <!-- 점프하는 캐릭터 -->
