@@ -187,3 +187,48 @@ a.logo-btn:active { transform: translate(1px,1px); }
   /* ✅ 커서 이미지 적용 */
   cursor: url('./cursor.png') 16 16, pointer;
 }
+/* === [추가] 헤더 버튼/링크 크기 통일 === */
+.topbar { gap: 8px; } /* 간격 유지용, 이미 있으면 그대로 사용 */
+
+/* 버튼과 링크를 완전히 같은 박스로 리셋 */
+button.logo-btn,
+a.logo-btn {
+  /* 타이포 고정 */
+  font-family: 'Galmuri11', monospace;
+  font-weight: 700;
+  font-size: 16px;        /* ← 글자 크기 명시 */
+  line-height: 1;         /* ← 줄높이 리셋(브라우저 차이 제거) */
+
+  /* 박스 모델 통일 */
+  display: inline-flex;   /* ← 텍스트 수직 중앙정렬 보장 */
+  align-items: center;
+  padding: 8px 12px;      /* ← 동일한 내부 여백 */
+  vertical-align: middle; /* 인라인 정렬 오프셋 방지 */
+  appearance: none;       /* ← OS 기본 버튼 스타일 제거 */
+  -webkit-appearance: none;
+
+  /* 룩/컬러 통일 */
+  background: #000;
+  color: #fff;
+  border: 0;
+  text-decoration: none;  /* a 밑줄 제거 */
+  box-shadow:
+    0 0 0 2px #fff inset,
+    0 0 0 4px #000 inset,
+    2px 2px 0 0 #000;
+
+  /* 커서 */
+  cursor: url('./cursor.png') 16 16, pointer;
+}
+
+/* 링크 상태 일관성 */
+a.logo-btn:link,
+a.logo-btn:visited,
+a.logo-btn:hover,
+a.logo-btn:active { color: #fff; }
+
+/* 눌림 연출도 동일하게 */
+button.logo-btn:active,
+a.logo-btn:active {
+  transform: translate(1px,1px);
+}
