@@ -10,7 +10,7 @@ const CHARACTERS = [
   { key: 'kabmin',   label: '김갑민' },
 ];
 
-const SHOW_ALL_MS = 1000;   // 시작 공개 1초
+const SHOW_ALL_MS = 1000;   // 시작 공개 1초 (앞면)
 const LIMIT_MS    = 7000;   // 제한시간 7초
 
 // ===== 엘리먼트 =====
@@ -47,7 +47,6 @@ let startAt = 0;
 
 // ===== 초기화 =====
 restartBtn.addEventListener('click', setup);
-
 setup();
 
 async function setup(){
@@ -56,7 +55,7 @@ async function setup(){
   // UI 초기화
   statusEl.hidden = true;
   statusEl.textContent = '';
-  statusEl.classList.remove('show'); // 디밍 제거
+  statusEl.classList.remove('show');
   timerLabel.textContent = '이미지 로딩 중…';
   timerFill.style.transform = 'scaleX(1)';
   board.innerHTML = '';
@@ -97,7 +96,6 @@ async function setup(){
     backImg.src = backUrl;
     backImg.alt = '카드 뒷면';
     backImg.draggable = false;
-
     back.appendChild(backImg);
     back.classList.add('has-image');
 
@@ -116,14 +114,14 @@ async function setup(){
     board.appendChild(btn);
   }
 
-  // 시작 연출: 1초 공개 → 뒤집기 → 타이머 7초
+  // 시작 연출: 1초 동안 "앞면" 보여주고 → 모두 뒤집어 "뒷면" 만들기
   const allCards = [...board.querySelectorAll('.card')];
-  allCards.forEach(c => c.classList.add('flipped')); // 앞면 보이기
+  // 기본 상태는 앞면(= flipped 없음)
   timerLabel.textContent = '시작! 카드 암기 시간 1초';
-
   await wait(SHOW_ALL_MS);
 
-  allCards.forEach(c => c.classList.remove('flipped')); // 뒤집기
+  // 모두 뒷면으로 전환
+  allCards.forEach(c => c.classList.add('flipped'));
   lock = false; // 입력 해제
   startTimer();
 }
@@ -131,7 +129,7 @@ async function setup(){
 // ===== 타이머 =====
 function startTimer(){
   startAt = performance.now();
-  timerLabel.textContent = '남은 시간: 7.00초';
+  timerLabel.textContent = `남은 시간: ${(LIMIT_MS/1000).toFixed(2)}초`;
   timerFill.style.transform = 'scaleX(1)';
 
   const tick = (now) => {
@@ -157,9 +155,15 @@ function startTimer(){
 // ===== 카드 뒤집기 로직 =====
 async function onFlip(btn){
   if (lock) return;
-  if (btn.classList.contains('flipped') || btn.classList.contains('matched')) return;
+  if (btn.classList.contains('matched')) return;
 
-  btn.classList.add('flipped');
+  // 현재 뒷면이면 앞면으로 보여주기 (flipped 제거)
+  if (btn.classList.contains('flipped')) {
+    btn.classList.remove('flipped');
+  } else {
+    // 이미 앞면이면 무시
+    return;
+  }
 
   if (!first){
     first = btn;
@@ -173,21 +177,20 @@ async function onFlip(btn){
   const isMatch = first.dataset.key === second.dataset.key;
 
   if (isMatch){
-    /* ⬇️ 수정: 매칭 시에도 'flipped' 유지 */
-    first.classList.add('flipped', 'matched');
-    second.classList.add('flipped', 'matched');
+    // 매칭: 앞면 상태 유지 + 매칭 표시 + 재클릭 방지
+    first.classList.add('matched');
+    second.classList.add('matched');
     first.setAttribute('disabled','true');
     second.setAttribute('disabled','true');
 
     matchedCount += 1;
-
     first = null;
     lock = false;
   } else {
-    // 실패: 잠깐 보여주고 다시 닫기
+    // 실패: 잠깐 보여준 뒤 다시 모두 뒷면으로 (flipped 추가)
     await wait(550);
-    first.classList.remove('flipped');
-    second.classList.remove('flipped');
+    first.classList.add('flipped');
+    second.classList.add('flipped');
     first = null;
     lock = false;
   }
@@ -206,10 +209,7 @@ function win(){
 function timeover(){
   cancelAnimationFrame(rafId);
   lock = true;
-  // 뒤집혀 있던 카드들 다시 닫기 & 입력 막기
-  [...board.querySelectorAll('.card')].forEach(c=>{
-    if (!c.classList.contains('matched')) c.removeAttribute('disabled');
-  });
+  // 뒤집혀 있던 카드들 다시 닫기 & 입력 막기 (이미 뒷면이니 별도 처리 불필요)
   statusEl.textContent = '⏰ 시간 초과! RESTART로 다시 도전하세요.';
   statusEl.hidden = false;
   statusEl.classList.add('show');   // 디밍 표시(보드 클릭 차단), HUD는 위라 클릭 가능
