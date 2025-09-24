@@ -23,6 +23,10 @@
   gap: 8px;
   align-items: center;
   margin-bottom: 10px;
+
+  /* ⬇️ 추가: 디밍 위로 올려서 RESTART 클릭 가능 */
+  position: relative;
+  z-index: 2;
 }
 .timer{ display: grid; gap: 6px; }
 .timer-label{ font-weight: 700; text-shadow:0 1px 3px rgba(0,0,0,.15); }
@@ -110,16 +114,19 @@
   text-shadow: 0 2px 6px rgba(0,0,0,.55);
   border-radius: 10px;
 
-  /* ★ 추가: 게임 중엔 클릭 가로채지 않도록 */
+  /* 게임 중엔 클릭 통과 */
   pointer-events: none;
 
-  /* ★ 추가: 기본은 보이지 않게 */
+  /* 기본은 숨김 */
   opacity: 0;
   visibility: hidden;
   transition: opacity .2s ease, visibility .2s ease;
+
+  /* ⬇️ 추가: HUD(z=2)보다 아래 두기 */
+  z-index: 1;
 }
 
-/* ★ 추가: 결과(성공/실패) 표시할 때만 보여주고 클릭 차단 */
+/* 결과(성공/실패) 때만 보이게. HUD는 위라서 클릭 가능 */
 .status.show{
   opacity: 1;
   visibility: visible;
