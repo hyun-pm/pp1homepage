@@ -96,37 +96,36 @@ body {
   width: min(18vw, 140px); height: auto;
   filter: drop-shadow(0 4px 10px rgba(0,0,0,.25));
   pointer-events: none;
-  z-index: 2; /* 로프 위에 손이 있는 느낌 */
+  z-index: 2;
 }
 .side-left{ left: 4%; transform: scaleX(-1); }
 .side-right{ right: 4%; }
 
-/* 손잡이 앵커: 캐릭터 손 위치 근처로 잡아줌 (반응형 비율로 대략값) */
+/* 손잡이 앵커(보이지 않음, 필요시 디버그 색상 넣어 확인) */
 .handle{
-  position: absolute; bottom: 130px; /* 손 높이 대략 */
+  position: absolute; bottom: 130px;
   width: 8px; height: 8px; border-radius: 50%;
-  background: transparent; /* 디버그시 색 넣어 확인 가능 */
-  z-index: 3;
-  pointer-events: none;
+  background: transparent;
+  z-index: 3; pointer-events: none;
 }
-.handle-left{ left: calc(4% + min(18vw,140px) - 10px); }   /* 왼쪽 캐릭의 안쪽 손 */
-.handle-right{ right: calc(4% +  min(18vw,140px) - 10px); } /* 오른쪽 캐릭의 안쪽 손 */
+.handle-left{ left: calc(4% + min(18vw,140px) - 10px); }
+.handle-right{ right: calc(4% + min(18vw,140px) - 10px); }
 
-/* 줄 (SVG) */
+/* 줄 (하늘색) */
 .rope{
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  z-index: 1; /* 캐릭(2) 아래, 바닥(0) 위 */
-  pointer-events: none;
+  z-index: 1; pointer-events: none;
 }
-#ropeCircle{
-  stroke: #3e8a42;
+#ropePath{
+  stroke: #66b8ff;           /* 하늘색 */
   stroke-width: 12;
   stroke-linecap: round;
+  stroke-linejoin: round;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
 }
 
-/* 플레이어(점프 캐릭터) */
+/* 플레이어 */
 .player{
   position: absolute; left: 50%; transform: translateX(-50%);
   bottom: 72px;
@@ -136,15 +135,8 @@ body {
   z-index: 2;
 }
 
-/* 바닥선: 약하게 */
-.ground{
-  position: absolute; left:0; right:0; bottom:60px;
-  height: 4px;
-  background: rgba(30,120,220,.2);
-  box-shadow: none;
-  border-radius: 2px;
-  z-index: 0;
-}
+/* 바닥선: 혼동 줄이기 위해 비활성(필요하면 아주 옅게) */
+.ground{ display:none; }
 
 /* 오버레이 */
 .overlay{
