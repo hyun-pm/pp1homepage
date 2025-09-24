@@ -1,1 +1,40 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Super PPM — Mini Game</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/minigame.css" />
+    <meta name="color-scheme" content="light" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="logo-btn" href="/" aria-label="홈으로">SUPERPPM</a>
+      <a class="logo-btn" href="/minigame.html" aria-current="page">MINI GAME</a>
+    </header>
+
+    <main class="game-outer" role="main">
+      <div class="game-wrap" role="region" aria-label="PPM 메모리 매칭 게임">
+        <div class="hud">
+          <div class="timer">
+            <div class="timer-label" id="timerLabel" aria-live="polite">준비 중…</div>
+            <div class="timer-bar"><i id="timerFill"></i></div>
+          </div>
+          <button id="restartBtn" class="logo-btn restart-btn" type="button" aria-label="게임 다시 시작">RESTART</button>
+        </div>
+
+        <div id="board" class="board" aria-live="polite" aria-label="카드 보드 4x4"></div>
+
+        <div id="status" class="status" role="alert" aria-live="assertive" hidden></div>
+      </div>
+
+      <p class="pixel-text" style="margin-top:16px">
+        규칙: 시작 시 <strong>1초</strong> 동안 모든 카드를 보여준 뒤 뒤집습니다. <strong>7초</strong> 안에 같은 캐릭터끼리 모두 맞추면 성공!
+      </p>
+    </main>
+
+    <script src="/minigame.js" defer></script>
+  </body>
+</html>
 
