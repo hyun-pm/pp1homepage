@@ -1,0 +1,147 @@
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11-Bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: 'Galmuri11', monospace;
+  background: linear-gradient(#269CFE, #BDF4FF);
+  color: #111;
+}
+
+/* 상단 바 (기존 스타일과 유사) */
+.topbar {
+  position: fixed; inset: 0 0 auto 0;
+  height: 56px; padding: 0 16px;
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(#269CFEcc, #BDF4FFcc);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid #ffffff55;
+  z-index: 100;
+}
+.logo-btn {
+  font-family: 'Galmuri11', monospace;
+  font-weight: 700;
+  background: #000; color: #fff; border: 0;
+  padding: 8px 12px;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+  text-decoration: none; display: inline-flex; align-items: center;
+  cursor: url('./cursor.png') 16 16, pointer;
+}
+.logo-btn:active { transform: translate(1px,1px); }
+.logo-btn.current { background:#222; opacity:.95; }
+
+.game-outer{
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding-top: 120px; /* topbar 공간 */
+}
+
+.game-wrap{
+  width: min(92vw, 820px);
+  background: #E9FBFF;
+  border: 2px solid #ffffffaa;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  border-radius: 12px;
+  padding: 14px 14px 18px;
+  position: relative;
+}
+
+/* HUD */
+.hud{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.timer{ display: grid; gap: 6px; }
+.timer-label{ font-weight: 700; color:#000; }
+.scores{ display:flex; gap:10px; align-items:center; font-weight:700; }
+.sep{ opacity:.5; }
+.restart-btn{
+  font-family: 'Galmuri11', monospace;
+  font-weight: 700;
+  background: #000; color: #fff; border: 0;
+  padding: 8px 12px;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+  cursor: url('./cursor.png') 16 16, pointer;
+}
+.restart-btn.big{ padding:12px 16px; font-size:18px; }
+.restart-btn:active{ transform: translate(1px,1px); }
+
+/* 무대 */
+.stage{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background:
+    radial-gradient(circle at 20% 20%, #ffffff, transparent 50%),
+    radial-gradient(circle at 80% 30%, #f3feff, transparent 50%),
+    linear-gradient(180deg, #bfeaff, #e9fbff 60%);
+  border: 2px solid #ffffffcc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* 좌우 캐릭터 */
+.side{
+  position: absolute; bottom: 72px;
+  width: min(18vw, 140px); height: auto;
+  image-rendering: auto;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.25));
+  pointer-events: none;
+}
+.side-left{ left: 4%; transform: scaleX(-1); } /* 서로 마주보게 */
+.side-right{ right: 4%; }
+
+/* 줄 (SVG) */
+.rope{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  transform-origin: 50% 80%; /* 바닥에 가까운 중심에서 회전 */
+  pointer-events: none;
+}
+
+/* 플레이어(점프 캐릭터) */
+.player{
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 72px; /* 지면에서 발 위치 */
+  width: min(15vw, 120px); height: auto;
+  image-rendering: auto;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.35));
+  pointer-events: none;
+}
+
+/* 지면 */
+.ground{
+  position: absolute; left:0; right:0; bottom:60px;
+  height: 8px; background: #97d3ff;
+  box-shadow: 0 -2px 0 #fff inset, 0 2px 0 #6fb8ff inset;
+  border-radius: 4px;
+}
+
+/* 오버레이 */
+.overlay{
+  position:absolute; inset:0; display:grid; place-items:center;
+  background: rgba(0,0,0,.45);
+}
+.overlay[hidden]{ display:none; }
+.overlay-box{
+  background:#000; color:#fff; padding:16px 20px; border-radius:12px;
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 4px #000 inset, 2px 2px 0 0 #000;
+  text-align:center;
+}
+.rules{
+  margin: 12px 4px 0;
+  color:#222; text-align:center;
+}
